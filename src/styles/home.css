@@ -1,0 +1,99 @@
+/* Set the background image for the entire page */
+body {
+  margin: 0;
+  padding: 50px 0 80px 0;
+}
+
+/* ===== Existing Styles ===== */
+.text-center {
+  text-align: center;
+}
+.mt-5 {
+  margin-top: 3rem;
+}
+.fs-1 {
+  font-size: 2.5rem;
+}
+.fw-bold {
+  font-weight: bold;
+}
+
+/* ===== New Component Styles ===== */
+.home-page {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding-bottom: 2rem;
+}
+
+.home-banner {
+  padding: 4rem 1rem;
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  color: white;
+}
+
+.home-banner h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.home-banner p {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Buttons */
+.browse-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: white;
+  color: #6e8efb;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dashboard-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Book Grid Layout */
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+  padding: 0 2rem;
+}
+
+.book-grid > div {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.book-grid > div:hover {
+  transform: translateY(-5px);
+}
+
+/* Section Styling */
+section {
+  padding: 2rem 0;
+}
+
+section h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+/* Hover Effects */
+button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
