@@ -9,6 +9,7 @@ import Signup from './pages/signup';
 import ResetPasswordPage from './pages/resetPassword';
 import VerifyEmailPage from './pages/verifyEmail';
 import BooksPage from './components/books/BooksPage'; // Import the BooksPage component
+const ChatbotWidget = React.lazy(() => import("./components/ChatbotWidget"));
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/books" element={<BooksPage />} /> {/* Added BooksPage route */}
       </Routes>
       <AppContent />
+      <ChatbotWidget/>
       <Footer/>
     </Router>
   );
