@@ -9,7 +9,9 @@ import Signup from './pages/signup';
 import ResetPasswordPage from './pages/resetPassword';
 import VerifyEmailPage from './pages/verifyEmail';
 import BooksPage from './components/books/BooksPage'; // Import the BooksPage component
-const ChatbotWidget = React.lazy(() => import("./components/ChatbotWidget"));
+import ChatbotWidget from "./components/ChatbotWidget";
+
+// const ChatbotWidget = React.lazy(() => import("./components/ChatbotWidget"));
 
 function App() {
   return (

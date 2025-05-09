@@ -1,6 +1,18 @@
 import React from 'react';
 
-const ChatBubble = ({ message }) => {
+interface Message {
+  id: number | string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+  model?: string;
+}
+
+interface ChatBubbleProps {
+  message: Message;
+}
+
+const ChatBubble: React.FC<ChatBubbleProps> = ({ message }) => {
   const isUser = message.role === 'user';
   
   return (

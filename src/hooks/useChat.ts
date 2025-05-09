@@ -1,16 +1,45 @@
-// hooks/useChat.js
+// hooks/useChat.ts
 import { useState } from 'react';
 
-const useChat = () => {
-  const [messages, setMessages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+interface Message {
+  id: number | string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+  model?: string;
+}
 
-  const sendMessage = async (message, model = 'gemini') => {
-    if (!message.trim()) return;
+interface ApiResponse {
+  id: number;
+  answer: string;
+  model_used: string;
+  timestamp: string;
+}
+
+interface HistoryItem {
+  id: number;
+  question: string;
+  answer: string;
+  model_used: string;
+  timestamp: string;
+}
+
+interface SendMessageResult {
+  success: boolean;
+  data?: ApiResponse;
+  error?: Error;
+}
+
+const useChat = () => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const sendMessage = async (message: string, model: string = 'gemini'): Promise<SendMessageResult> => {
+    if (!message.trim()) return { success: false, error: new Error('Empty message') };
     
     // Add user message to chat with consistent structure
-    const userMessage = {
+    const userMessage: Message = {
       id: Date.now(),
       role: 'user',
       content: message,
@@ -37,10 +66,10 @@ const useChat = () => {
         throw new Error(`Error: ${response.status}`);
       }
       
-      const data = await response.json();
+      const data: ApiResponse = await response.json();
       
       // Format bot response based on the API response format
-      const botMessage = {
+      const botMessage: Message = {
         id: data.id || Date.now() + 1, // Use server ID if available, otherwise generate one
         role: 'assistant',
         content: data.answer,
@@ -53,19 +82,19 @@ const useChat = () => {
     } catch (error) {
       console.error('Error:', error);
       setError('Failed to get response from the server. Please try again.');
-      return { success: false, error };
+      return { success: false, error: error instanceof Error ? error : new Error('Unknown error') };
     } finally {
       setIsLoading(false);
     }
   };
 
-  const clearChat = () => {
+  const clearChat = (): void => {
     setMessages([]);
     setError(null);
   };
 
   // Function to get chat history
-  const getChatHistory = async () => {
+  const getChatHistory = async (): Promise<boolean> => {
     try {
       setIsLoading(true);
       const response = await fetch('http://127.0.0.1:8000/chat/history/', {
@@ -79,10 +108,10 @@ const useChat = () => {
         throw new Error(`Error: ${response.status}`);
       }
       
-      const data = await response.json();
+      const data: HistoryItem[] = await response.json();
       
       // Convert history format to match our chat format
-      const formattedHistory = [];
+      const formattedHistory: Message[] = [];
       
       // Process history in pairs (question followed by answer)
       for (const item of data) {

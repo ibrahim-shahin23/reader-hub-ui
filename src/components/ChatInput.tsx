@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 
-const ChatInput = ({ onSendMessage, isLoading }) => {
-  const [inputValue, setInputValue] = useState('');
+interface ChatInputProps {
+  onSendMessage: (message: string) => void;
+  isLoading: boolean;
+}
 
-  const handleSubmit = (e) => {
+const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }) => {
+  const [inputValue, setInputValue] = useState<string>('');
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (inputValue.trim() && !isLoading) {
       onSendMessage(inputValue);
@@ -19,7 +24,7 @@ const ChatInput = ({ onSendMessage, isLoading }) => {
           className="form-control"
           placeholder="Type your message..."
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
           disabled={isLoading}
         />
         <button 

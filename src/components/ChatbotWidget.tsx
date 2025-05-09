@@ -1,10 +1,10 @@
-// components/ChatbotWidget.jsx
+// components/ChatbotWidget.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import ChatBubble from './ChatBubble';
 import ChatInput from './ChatInput';
 import useChat from '../hooks/useChat';
 
-// Add this CSS class to your existing CSS file:
+// Define the CSS styles
 const styles = `
 .chat-widget {
   position: fixed;
@@ -57,18 +57,20 @@ const styles = `
   background-color: var(--bs-light);
 }`;
 
+// Define possible AI model options
+type ModelOption = 'gemini' | 'ollama';
 
-const ChatbotWidget = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedModel, setSelectedModel] = useState('gemini');
+const ChatbotWidget: React.FC = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedModel, setSelectedModel] = useState<ModelOption>('gemini');
   const { messages, isLoading, error, sendMessage, clearChat } = useChat();
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const toggleChat = () => {
+  const toggleChat = (): void => {
     setIsOpen(!isOpen);
   };
 
-  const handleSendMessage = (message) => {
+  const handleSendMessage = (message: string): void => {
     sendMessage(message, selectedModel);
   };
 
@@ -81,7 +83,7 @@ const ChatbotWidget = () => {
 
   return (
     <>
-    <style>{styles}</style>
+      <style>{styles}</style>
       {/* Chat toggle button */}
       <button onClick={toggleChat} className="chat-toggle-btn">
         {isOpen ? (
@@ -101,7 +103,8 @@ const ChatbotWidget = () => {
               <select 
                 className="form-select form-select-sm me-2" 
                 value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => 
+                  setSelectedModel(e.target.value as ModelOption)}
                 style={{ width: 'auto' }}
               >
                 <option value="gemini">Gemini</option>
@@ -126,7 +129,7 @@ const ChatbotWidget = () => {
             ) : (
               <>
                 {messages.map((msg) => (
-                  <ChatBubble key={msg.id} message={msg} />
+                  <ChatBubble key={msg.id.toString()} message={msg} />
                 ))}
                 
                 {isLoading && (
