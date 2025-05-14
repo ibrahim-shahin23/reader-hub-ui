@@ -6,7 +6,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import logo from '../assets/logo1.png'; // Import the image
+import logo from '../assets/logo1.png';
 
 function NavbarComponent() {
   return (
@@ -14,12 +14,12 @@ function NavbarComponent() {
       <Navbar expand="lg" className="p-0 bg-body-tertiary mb-3" fixed="top">
         <Container fluid className='ps-0'>
           <Navbar.Brand className='p-0' href="#">
-            <img src={logo} // Use the imported image
-            alt="Logo"
-            width="60"
-            height="60"
-            className="d-inline-block align-top" />
-            </Navbar.Brand>
+            <img src={logo}
+              alt="Logo"
+              width="60"
+              height="60"
+              className="d-inline-block align-top" />
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="offcanvasNavbar-expand-lg" />
           <Navbar.Offcanvas
             id="offcanvasNavbar-expand-lg"
@@ -39,16 +39,15 @@ function NavbarComponent() {
                 <Nav.Link href="dashboard">Dashboard</Nav.Link>
                 
                 <NavDropdown
-                  title="Dropdown"
+                  title="Account"
                   id="offcanvasNavbarDropdown-expand-lg"
                 >
-                  <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-                  <NavDropdown.Item href="#action4">
-                    Another action
-                  </NavDropdown.Item>
+                  <NavDropdown.Item href="#action3">Profile</NavDropdown.Item>
+                  <NavDropdown.Item href="/cart">Cart</NavDropdown.Item>
+                  <NavDropdown.Item href="/myorders">My Orders</NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item href="#action5">
-                    Something else here
+                    Logout
                   </NavDropdown.Item>
                 </NavDropdown>
               </Nav>

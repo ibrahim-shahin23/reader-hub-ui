@@ -8,7 +8,10 @@ import Login from './pages/login';
 import Signup from './pages/signup';
 import ResetPasswordPage from './pages/resetPassword';
 import VerifyEmailPage from './pages/verifyEmail';
-import BooksPage from './components/books/BooksPage'; // Import the BooksPage component
+import BooksPage from './components/books/BooksPage';
+import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
+import MyOrdersPage from './pages/MyOrdersPage';
 
 function App() {
   return (
@@ -21,7 +24,10 @@ function App() {
         <Route path="/resetPassword" element={<ResetPasswordPage />} />
         <Route path="/verifyEmail" element={<VerifyEmailPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/books" element={<BooksPage />} /> {/* Added BooksPage route */}
+        <Route path="/books" element={<BooksPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/myorders" element={<MyOrdersPage />} />
       </Routes>
       <AppContent />
       <Footer/>
