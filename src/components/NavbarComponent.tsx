@@ -42,9 +42,10 @@ function NavbarComponent() {
                   title="Account"
                   id="offcanvasNavbarDropdown-expand-lg"
                 >
-                  <NavDropdown.Item href="#action3">Profile</NavDropdown.Item>
+                  <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
                   <NavDropdown.Item href="/cart">Cart</NavDropdown.Item>
                   <NavDropdown.Item href="/myorders">My Orders</NavDropdown.Item>
+                  <NavDropdown.Item href="/favorites">Favorites</NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item href="#action5">
                     Logout
