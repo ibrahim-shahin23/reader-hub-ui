@@ -48,16 +48,16 @@ const Login: React.FC = () => {
         console.log(errorData)
         throw new Error(errorData?.message || 'Login failed');
       }
-      
       const data = await response.json();
-      
-      // Store token or user data if returned by the API
-      if (data.token) {
-        localStorage.setItem('token', data.token);
+      console.log(data)
+
+      // Store token and login status
+      if (data.data.token) {
+        localStorage.setItem('token', data.data.token);       
+        localStorage.setItem('isLoggedIn', 'true');
       }
-      
       setSuccess('Login successful! Redirecting...');
-      
+
       // Redirect to home page after successful login
       setTimeout(() => {
         window.location.href = '/';

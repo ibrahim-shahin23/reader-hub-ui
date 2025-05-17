@@ -1,4 +1,5 @@
 import { type Book } from './BooksPage';
+import axios from 'axios';
 
 interface BookCardProps {
   book: Book;
@@ -8,6 +9,33 @@ interface BookCardProps {
 }
 
 export default function BookCard({ book, onBookClick, onAddToCart, onAddToFavorite }: BookCardProps) {
+  const handleAddToFavorite = async (id: string) => {
+    try {
+      // Get the token from localStorage
+      const token = localStorage.getItem('token');
+      //const baseUrl = import.meta.env.VITE_BASE_URL
+      const baseUrl = "http://localhost:3030"
+      console.log("token", token);
+
+      // Make the API call to add to favorites
+      await axios.post(
+        `${baseUrl}/api/auth/favorites/add`,
+        { bookId: id },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      
+      // Call the parent component's handler
+      onAddToFavorite(id);
+    } catch (error) {
+      console.error('Error adding book to favorites:', error);
+    }
+  };
+
   return (
     <div 
       style={{ 
@@ -70,7 +98,7 @@ export default function BookCard({ book, onBookClick, onAddToCart, onAddToFavori
           }}
           onClick={(e) => {
             e.stopPropagation();
-            onAddToFavorite(book.id);
+            handleAddToFavorite(book.id);
           }}
         >
           ♥

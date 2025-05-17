@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -9,6 +9,22 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import logo from '../assets/logo1.png';
 
 function NavbarComponent() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check login status when component mounts
+    const token = localStorage.getItem('token');
+    const loginStatus = !!token; // Convert to boolean
+    setIsLoggedIn(loginStatus);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('isLoggedIn');
+    setIsLoggedIn(false); // Update state immediately
+    window.location.href = '/';
+  };
+
   return (
     <>
       <Navbar expand="lg" className="p-0 bg-body-tertiary mb-3" fixed="top">
@@ -34,23 +50,29 @@ function NavbarComponent() {
             <Offcanvas.Body>
               <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="login">Login</Nav.Link>
-                <Nav.Link href="signup">Signup</Nav.Link>
-                <Nav.Link href="dashboard">Dashboard</Nav.Link>
-                
-                <NavDropdown
-                  title="Account"
-                  id="offcanvasNavbarDropdown-expand-lg"
-                >
-                  <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
-                  <NavDropdown.Item href="/cart">Cart</NavDropdown.Item>
-                  <NavDropdown.Item href="/myorders">My Orders</NavDropdown.Item>
-                  <NavDropdown.Item href="/favorites">Favorites</NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action5">
-                    Logout
-                  </NavDropdown.Item>
-                </NavDropdown>
+                {!isLoggedIn ? (
+                  <>
+                    <Nav.Link href="login">Login</Nav.Link>
+                    <Nav.Link href="signup">Signup</Nav.Link>
+                  </>
+                ) : (
+                  <>
+                    <Nav.Link href="dashboard">Dashboard</Nav.Link>
+                    <NavDropdown
+                      title="Account"
+                      id="offcanvasNavbarDropdown-expand-lg"
+                    >
+                      <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+                      <NavDropdown.Item href="/cart">Cart</NavDropdown.Item>
+                      <NavDropdown.Item href="/myorders">My Orders</NavDropdown.Item>
+                      <NavDropdown.Item href="/favorites">Favorites</NavDropdown.Item>
+                      <NavDropdown.Divider />
+                      <NavDropdown.Item onClick={handleLogout}>
+                        Logout
+                      </NavDropdown.Item>
+                    </NavDropdown>
+                  </>
+                )}
               </Nav>
               <Form className="d-flex">
                 <Form.Control
