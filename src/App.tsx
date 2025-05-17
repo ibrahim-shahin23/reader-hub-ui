@@ -14,6 +14,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import MyOrdersPage from './pages/MyOrdersPage';
 import FavoritesPage from './pages/FavoritesPage';
 import ProfilePage from './pages/ProfilePage';
+import Contact from './pages/Contact'
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/myorders" element={<MyOrdersPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
       <AppContent />
       <Footer/>

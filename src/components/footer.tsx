@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, Nav, Navbar, Button, Form } from 'react-bootstrap';
 import logo from '../assets/logo1.png';
 
@@ -16,10 +15,10 @@ function Footer() {
         <Navbar.Toggle aria-controls="footer-navbar" />
         <Navbar.Collapse id="footer-navbar">
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
+            <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="#about">About</Nav.Link>
             <Nav.Link href="#services">Services</Nav.Link>
-            <Nav.Link href="#contact">Contact</Nav.Link>
+            <Nav.Link href="/contact">Contact</Nav.Link>
           </Nav>
           <div className='rights me-auto mb-1'>
             &copy; 2025 Reader Hub. All rights reserved.
