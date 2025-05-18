@@ -15,6 +15,7 @@ import MyOrdersPage from './pages/MyOrdersPage';
 import FavoritesPage from './pages/FavoritesPage';
 import ProfilePage from './pages/ProfilePage';
 import Contact from './pages/Contact'
+import About from './pages/About'
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
       </Routes>
       <AppContent />
       <Footer/>
