@@ -12,8 +12,8 @@ body {
 }
 
 .container {
-  min-height: 100vh;
-  background: linear-gradient(to bottom right, #ebf4ff, #eef2ff);
+  /* min-height: 100vh; */
+  /* background: linear-gradient(to bottom right, #ebf4ff, #eef2ff); */
 }
 
 .icon {

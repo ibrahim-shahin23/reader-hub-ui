@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
@@ -29,7 +28,7 @@ function NavbarComponent() {
     <>
       <Navbar expand="lg" className="p-0 bg-body-tertiary mb-3" fixed="top">
         <Container fluid className='ps-0'>
-          <Navbar.Brand className='p-0' href="#">
+          <Navbar.Brand className='p-0' as={Link} to="/">
             <img src={logo}
               alt="Logo"
               width="60"
@@ -48,24 +47,24 @@ function NavbarComponent() {
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-              <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link href="/">Home</Nav.Link>
+              <Nav className="justify-content-center flex-grow-1 pe-3">
+                <Nav.Link as={Link} to="/">Home</Nav.Link>
                 {!isLoggedIn ? (
                   <>
-                    <Nav.Link href="login">Login</Nav.Link>
-                    <Nav.Link href="signup">Signup</Nav.Link>
+                    <Nav.Link as={Link} to="/login">Login</Nav.Link>
+                    <Nav.Link as={Link} to="/signup">Signup</Nav.Link>
                   </>
                 ) : (
                   <>
-                    <Nav.Link href="dashboard">Dashboard</Nav.Link>
+                    <Nav.Link as={Link} to="/dashboard">Dashboard</Nav.Link>
                     <NavDropdown
                       title="Account"
                       id="offcanvasNavbarDropdown-expand-lg"
                     >
-                      <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
-                      <NavDropdown.Item href="/cart">Cart</NavDropdown.Item>
-                      <NavDropdown.Item href="/myorders">My Orders</NavDropdown.Item>
-                      <NavDropdown.Item href="/favorites">Favorites</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} to="/profile">Profile</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} to="/cart">Cart</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} to="/myorders">My Orders</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} to="/favorites">Favorites</NavDropdown.Item>
                       <NavDropdown.Divider />
                       <NavDropdown.Item onClick={handleLogout}>
                         Logout
@@ -74,15 +73,6 @@ function NavbarComponent() {
                   </>
                 )}
               </Nav>
-              <Form className="d-flex">
-                <Form.Control
-                  type="search"
-                  placeholder="Search"
-                  className="me-2"
-                  aria-label="Search"
-                />
-                <Button variant="outline-success">Search</Button>
-              </Form>
             </Offcanvas.Body>
           </Navbar.Offcanvas>
         </Container>
