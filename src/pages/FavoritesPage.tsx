@@ -1,37 +1,20 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import FavoritesBookCard from '../components/FavoritesBookCard';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { removeFromFavorites } from '../redux/slices/favoritesSlice';
+import { addToCart } from '../redux/slices/cartSlice';
 
 const FavoritesPage = () => {
-  // Mock data
-  const favoriteBooks = [
-    {
-      id: '1',
-      title: 'The Great Gatsby',
-      author: 'F. Scott Fitzgerald',
-      price: 12.99,
-      coverImage: 'https://m.media-amazon.com/images/I/71FTb9X6wsL._AC_UF1000,1000_QL80_.jpg',
-      rating: 4,
-      discount: 10,
-    },
-    {
-      id: '2',
-      title: 'To Kill a Mockingbird',
-      author: 'Harper Lee',
-      price: 9.99,
-      coverImage: 'https://m.media-amazon.com/images/I/71FxgtFKcQL._AC_UF1000,1000_QL80_.jpg',
-      rating: 5,
-    },
-  ];
+  const dispatch = useAppDispatch();
+  const favoriteBooks = useAppSelector((state) => state.favorites.books);
 
   const handleRemoveFavorite = (bookId: string) => {
-    console.log('Remove favorite', bookId);
-    // Implement  removal logic 
+    dispatch(removeFromFavorites(bookId));
   };
 
-  const handleAddToCart = (bookId: string) => {
-    console.log('Add to cart', bookId);
-    // Implement  add to cart logic 
+  const handleAddToCart = (book: any) => {
+    dispatch(addToCart(book));
   };
 
   return (
@@ -49,7 +32,7 @@ const FavoritesPage = () => {
               <FavoritesBookCard 
                 book={book}
                 onRemoveFavorite={() => handleRemoveFavorite(book.id)}
-                onAddToCart={() => handleAddToCart(book.id)}
+                onAddToCart={() => handleAddToCart(book)}
               />
             </Col>
           ))}

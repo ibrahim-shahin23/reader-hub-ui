@@ -7,6 +7,8 @@ interface Book {
   author: string;
   price: number;
   coverImage: string;
+  rating?: number;
+  discount?: number;
 }
 
 interface FavoritesBookCardProps {
