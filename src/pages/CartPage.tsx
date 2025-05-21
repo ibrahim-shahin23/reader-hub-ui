@@ -7,6 +7,7 @@ import {
   decreaseQuantity, 
   removeFromCart 
 } from '../redux/slices/cartSlice';
+import { Link } from 'react-router-dom';
 
 const CartPage = () => {
   const dispatch = useAppDispatch();
@@ -122,14 +123,15 @@ const CartPage = () => {
                   </div>
                 </div>
                 
-                <Button 
-                  variant="primary" 
-                  size="lg" 
-                  className="w-100 py-3 fw-bold"
-                  href="/checkout"
-                >
-                  Proceed to Checkout
-                </Button>
+                <Link to="/checkout">
+                  <Button 
+                    variant="primary" 
+                    size="lg" 
+                    className="w-100 py-3 fw-bold"
+                  >
+                    Proceed to Checkout
+                  </Button>
+                </Link>
               </div>
               
               <div className="mt-4">

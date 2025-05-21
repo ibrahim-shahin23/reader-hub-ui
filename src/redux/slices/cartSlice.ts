@@ -1,16 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Book {
+// Export the CartItem interface
+export interface CartItem {
   id: number | string;
   title: string;
   author: string;
   publisher: string;
   price: number;
-  coverImage: string;
-}
-
-interface CartItem extends Book {
   quantity: number;
+  coverImage: string;
 }
 
 interface CartState {
@@ -36,15 +34,6 @@ const initialState: CartState = {
       price: 10.50,
       quantity: 2,
       coverImage: "https://m.media-amazon.com/images/I/71FxgtFKcQL._AC_UF1000,1000_QL80_.jpg"
-    },
-    {
-      id: 3,
-      title: "1984",
-      author: "George Orwell",
-      publisher: "Secker & Warburg",
-      price: 9.99,
-      quantity: 1,
-      coverImage: "https://m.media-amazon.com/images/I/81WunXq0HjL._AC_UF1000,1000_QL80_.jpg"
     }
   ],
 };
@@ -53,7 +42,7 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addToCart: (state, action: PayloadAction<Book>) => {
+    addToCart: (state, action: PayloadAction<CartItem>) => {
       const existingItem = state.items.find(item => item.id === action.payload.id);
       if (existingItem) {
         existingItem.quantity += 1;
