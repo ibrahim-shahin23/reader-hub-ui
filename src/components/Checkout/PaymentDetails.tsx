@@ -1,27 +1,41 @@
 import React, { useState } from 'react';
-import { Card, Form, Button, Row, Col, Modal } from 'react-bootstrap';
+import { Card, Form, Button, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { clearCart } from '../../redux/slices/cartSlice';
+import { addOrder } from '../../redux/slices/ordersSlice';
 
 const PaymentDetails = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.items);
+  const [formData, setFormData] = useState({
+    cardNumber: '',
+    expiryDate: '',
+    cvv: '',
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleConfirmOrder = () => {
-    //  process the payment
+    // Get shipping address from form 
+    const shippingAddress = "123 Main St, City, Country"; // Replace with actual address from form
     
+    // Create the order
+    dispatch(addOrder({
+      items: [...cartItems],
+      deliveryAddress: shippingAddress
+    }));
     
-    //show the success modal:
+    // Clear the cart
+    dispatch(clearCart());
+    
+    // Show success modal
     setShowSuccessModal(true);
-  };
-
-  const handleViewOrders = () => {
-    navigate('/myorders');
-    setShowSuccessModal(false);
-  };
-
-  const handleReturnHome = () => {
-    navigate('/');
-    setShowSuccessModal(false);
   };
 
   return (
@@ -35,42 +49,47 @@ const PaymentDetails = () => {
               <Form.Label>Card Number</Form.Label>
               <Form.Control 
                 type="text" 
+                name="cardNumber"
                 placeholder="1234 5678 9012 3456" 
                 pattern="[0-9\s]{13,19}" 
                 required 
+                value={formData.cardNumber}
+                onChange={handleInputChange}
               />
             </Form.Group>
 
-            <Row>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Expiration Date</Form.Label>
-                  <Form.Control 
-                    type="text" 
-                    placeholder="MM/YY" 
-                    pattern="\d{2}/\d{2}" 
-                    required 
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>CVV</Form.Label>
-                  <Form.Control 
-                    type="text" 
-                    placeholder="123" 
-                    pattern="\d{3}" 
-                    required 
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
+            <Form.Group className="mb-3">
+              <Form.Label>Expiration Date</Form.Label>
+              <Form.Control 
+                type="text" 
+                name="expiryDate"
+                placeholder="MM/YY" 
+                pattern="\d{2}/\d{2}" 
+                required 
+                value={formData.expiryDate}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>CVV</Form.Label>
+              <Form.Control 
+                type="text" 
+                name="cvv"
+                placeholder="123" 
+                pattern="\d{3}" 
+                required 
+                value={formData.cvv}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
 
             <Button 
               variant="primary" 
               size="lg" 
               className="w-100 py-3 fw-bold mt-2"
               onClick={handleConfirmOrder}
+              disabled={cartItems.length === 0}
             >
               Confirm Order
             </Button>
@@ -89,13 +108,10 @@ const PaymentDetails = () => {
           </p>
         </Modal.Body>
         <Modal.Footer className="justify-content-center">
-          <Button 
-           variant="primary" 
-           onClick={() => navigate('/myorders')}
-           >
-           Open My Orders Page
+          <Button variant="primary" onClick={() => navigate('/myorders')}>
+            View My Orders
           </Button>
-          <Button variant="secondary" onClick={handleReturnHome}>
+          <Button variant="secondary" onClick={() => navigate('/')}>
             Return to Homepage
           </Button>
         </Modal.Footer>

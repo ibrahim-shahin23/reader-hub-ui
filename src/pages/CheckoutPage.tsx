@@ -3,18 +3,25 @@ import { Container, Row, Col } from 'react-bootstrap';
 import CheckoutForm from '../components/Checkout/CheckoutForm';
 import OrderSummary from '../components/Checkout/OrderSummary';
 import PaymentDetails from '../components/Checkout/PaymentDetails';
+import { useAppSelector } from '../redux/hooks';
 
 const CheckoutPage = () => {
-  // Mock order data
+  const cartItems = useAppSelector((state) => state.cart.items);
+  
+  // Calculate totals
+  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const deliveryFee = 3.99;
+  const total = subtotal + deliveryFee;
+
   const order = {
-    items: [
-      { title: "The Great Gatsby", quantity: 1, price: 12.99 },
-      { title: "To Kill a Mockingbird", quantity: 2, price: 10.50 },
-      { title: "1984", quantity: 1, price: 9.99 }
-    ],
-    subtotal: 43.98,
-    deliveryFee: 3.99,
-    total: 47.97
+    items: cartItems.map(item => ({
+      title: item.title,
+      quantity: item.quantity,
+      price: item.price
+    })),
+    subtotal,
+    deliveryFee,
+    total
   };
 
   return (
