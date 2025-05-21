@@ -3,6 +3,10 @@ import BookCard from './BookCard';
 import SearchBar from './SearchBar';
 import CategoryFilter from './CategoryFilter';
 import Pagination from './Pagination';
+import { useAppDispatch } from '../../redux/hooks';
+import { addBookToCart } from '../../redux/slices/cartSlice';
+import { addToFavorites } from '../../redux/slices/favoritesSlice';
+import { Popup } from '../common/Popup';
 
 export type Book = {
   id: string;
@@ -89,6 +93,216 @@ const mockBooks: Book[] = [
     inStock: true,
     pageCount: 279,
     language: 'English'
+  },
+  {
+    id: '6',
+    title: 'The Great Gatsby',
+    author: 'F. Scott Fitzgerald',
+    coverImage: 'https://m.media-amazon.com/images/I/71FTb9X6wsL._AC_UF1000,1000_QL80_.jpg',
+    category: 'Fiction',
+    price: 11.99,
+    rating: 4.3,
+    publisher: 'Scribner',
+    description: 'A story of wealth, love, and the American Dream in the Roaring Twenties.',
+    inStock: true,
+    pageCount: 180,
+    language: 'English'
+  },
+  {
+    id: '7',
+    title: 'Moby Dick',
+    author: 'Herman Melville',
+    coverImage: 'https://m.media-amazon.com/images/I/91I5S+2XkVL._AC_UF1000,1000_QL80_.jpg',
+    category: 'Adventure',
+    price: 14.50,
+    rating: 4.0,
+    publisher: 'Harper & Brothers',
+    description: 'The voyage of the whaling ship Pequod and its captain Ahab, who seeks revenge on the white whale Moby Dick.',
+    inStock: true,
+    pageCount: 635,
+    language: 'English'
+  },
+  {
+    id: '8',
+    title: 'War and Peace',
+    author: 'Leo Tolstoy',
+    coverImage: 'https://m.media-amazon.com/images/I/91OqYLJQNJL._AC_UF1000,1000_QL80_.jpg',
+    category: 'Historical Fiction',
+    price: 16.99,
+    rating: 4.7,
+    publisher: 'The Russian Messenger',
+    description: 'A masterpiece that chronicles the French invasion of Russia and the impact of the Napoleonic era on Tsarist society.',
+    inStock: true,
+    pageCount: 1225,
+    language: 'Russian'
+  },
+  {
+    id: '9',
+    title: 'The Catcher in the Rye',
+    author: 'J.D. Salinger',
+    coverImage: 'https://m.media-amazon.com/images/I/91HPG31dTwL._AC_UF1000,1000_QL80_.jpg',
+    category: 'Fiction',
+    price: 10.25,
+    rating: 3.8,
+    publisher: 'Little, Brown and Company',
+    description: 'The story of Holden Caulfield and his experiences in New York City after being expelled from prep school.',
+    inStock: true,
+    pageCount: 234,
+    language: 'English'
+  },
+  {
+    id: '10',
+    title: 'The Lord of the Rings',
+    author: 'J.R.R. Tolkien',
+    coverImage: 'https://m.media-amazon.com/images/I/71jLBXtWJWL._AC_UF1000,1000_QL80_.jpg',
+    category: 'Fantasy',
+    price: 22.99,
+    rating: 4.9,
+    publisher: 'Allen & Unwin',
+    description: 'The epic high fantasy trilogy about the struggle to destroy the One Ring and defeat the Dark Lord Sauron.',
+    inStock: true,
+    pageCount: 1178,
+    language: 'English'
+  },
+  {
+    id: '11',
+    title: 'Crime and Punishment',
+    author: 'Fyodor Dostoevsky',
+    coverImage: 'https://m.media-amazon.com/images/I/71YHjVXyR0L._AC_UF1000,1000_QL80_.jpg',
+    category: 'Psychological Fiction',
+    price: 12.75,
+    rating: 4.5,
+    publisher: 'The Russian Messenger',
+    description: 'A novel about the mental anguish and moral dilemmas of an impoverished ex-student who murders a pawnbroker.',
+    inStock: true,
+    pageCount: 430,
+    language: 'Russian'
+  },
+  {
+    id: '12',
+    title: 'The Alchemist',
+    author: 'Paulo Coelho',
+    coverImage: 'https://m.media-amazon.com/images/I/71aFt4+OTOL._AC_UF1000,1000_QL80_.jpg',
+    category: 'Self-Help',
+    price: 9.99,
+    rating: 3.9,
+    publisher: 'HarperTorch',
+    description: 'A shepherd boy travels from Spain to Egypt in search of treasure and discovers his personal legend.',
+    inStock: true,
+    pageCount: 208,
+    language: 'Portuguese'
+  },
+  {
+    id: '13',
+    title: 'The Diary of a Young Girl',
+    author: 'Anne Frank',
+    coverImage: 'https://m.media-amazon.com/images/I/71M7Z6hZRjL._AC_UF1000,1000_QL80_.jpg',
+    category: 'Biography',
+    price: 8.25,
+    rating: 4.7,
+    publisher: 'Contact Publishing',
+    description: 'The diary of Anne Frank, a Jewish girl who chronicled her life in hiding during the German occupation of the Netherlands.',
+    inStock: true,
+    pageCount: 283,
+    language: 'Dutch'
+  },
+  {
+    id: '14',
+    title: 'The Little Prince',
+    author: 'Antoine de Saint-Exupéry',
+    coverImage: 'https://m.media-amazon.com/images/I/81HZ9p+3M5L._AC_UF1000,1000_QL80_.jpg',
+    category: 'Children',
+    price: 7.50,
+    rating: 4.8,
+    publisher: 'Reynal & Hitchcock',
+    description: 'A poetic tale about a young prince who travels the universe and learns about love, loss, and human nature.',
+    inStock: true,
+    pageCount: 96,
+    language: 'French'
+  },
+  {
+    id: '15',
+    title: 'Don Quixote',
+    author: 'Miguel de Cervantes',
+    coverImage: 'https://m.media-amazon.com/images/I/91Q5dC+9QhL._AC_UF1000,1000_QL80_.jpg',
+    category: 'Adventure',
+    price: 13.99,
+    rating: 4.2,
+    publisher: 'Francisco de Robles',
+    description: 'The story of a man who reads so many chivalric romances that he decides to become a knight-errant.',
+    inStock: true,
+    pageCount: 863,
+    language: 'Spanish'
+  },
+  {
+    id: '16',
+    title: 'The Odyssey',
+    author: 'Homer',
+    coverImage: 'https://m.media-amazon.com/images/I/91b5Y9GqY1L._AC_UF1000,1000_QL80_.jpg',
+    category: 'Epic Poetry',
+    price: 10.99,
+    rating: 4.1,
+    publisher: 'Various',
+    description: 'The ancient Greek epic poem about Odysseus\'s long journey home after the fall of Troy.',
+    inStock: true,
+    pageCount: 541,
+    language: 'Ancient Greek'
+  },
+  {
+    id: '17',
+    title: 'Frankenstein',
+    author: 'Mary Shelley',
+    coverImage: 'https://m.media-amazon.com/images/I/71E4WQKz3TL._AC_UF1000,1000_QL80_.jpg',
+    category: 'Gothic Fiction',
+    price: 9.25,
+    rating: 4.0,
+    publisher: 'Lackington, Hughes',
+    description: 'A scientist creates a sapient creature in an unorthodox scientific experiment.',
+    inStock: true,
+    pageCount: 280,
+    language: 'English'
+  },
+  {
+    id: '18',
+    title: 'The Picture of Dorian Gray',
+    author: 'Oscar Wilde',
+    coverImage: 'https://m.media-amazon.com/images/I/71QN2Xx3VVL._AC_UF1000,1000_QL80_.jpg',
+    category: 'Gothic Fiction',
+    price: 8.99,
+    rating: 4.2,
+    publisher: 'Lippincott\'s Monthly Magazine',
+    description: 'A story of a man who remains eternally young while his portrait ages and reflects his moral decay.',
+    inStock: true,
+    pageCount: 254,
+    language: 'English'
+  },
+  {
+    id: '19',
+    title: 'Wuthering Heights',
+    author: 'Emily Brontë',
+    coverImage: 'https://m.media-amazon.com/images/I/71Jk3baR3RL._AC_UF1000,1000_QL80_.jpg',
+    category: 'Gothic Fiction',
+    price: 10.50,
+    rating: 4.0,
+    publisher: 'Thomas Cautley Newby',
+    description: 'A story of the intense, passionate, but ultimately doomed love between Catherine Earnshaw and Heathcliff.',
+    inStock: true,
+    pageCount: 348,
+    language: 'English'
+  },
+  {
+    id: '20',
+    title: 'The Brothers Karamazov',
+    author: 'Fyodor Dostoevsky',
+    coverImage: 'https://m.media-amazon.com/images/I/91QdSMZ0X5L._AC_UF1000,1000_QL80_.jpg',
+    category: 'Philosophical Fiction',
+    price: 15.99,
+    rating: 4.6,
+    publisher: 'The Russian Messenger',
+    description: 'A passionate philosophical novel set in 19th-century Russia that enters deeply into debates about God, free will, and morality.',
+    inStock: true,
+    pageCount: 796,
+    language: 'Russian'
   }
 ];
 
@@ -102,10 +316,12 @@ const categories = [
 const BOOKS_PER_PAGE = 10;
 
 export default function BooksPage() {
+  const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [popupMessage, setPopupMessage] = useState<string | null>(null);
 
   const filteredBooks = mockBooks.filter(book => {
     const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -124,20 +340,24 @@ export default function BooksPage() {
     setSelectedBook(book);
   };
 
-  const handleAddToCart = (id: string) => {
-    console.log(`Added book ${id} to cart`);
-    // Close modal after adding to cart
+  const handleAddToCart = (book: Book) => {
+    dispatch(addBookToCart(book));
+    setPopupMessage(`${book.title} has been added to your cart!`);
     setSelectedBook(null);
   };
 
-  const handleAddToFavorite = (id: string) => {
-    console.log(`Added book ${id} to favorites`);
-    // Close modal after adding to favorites
+  const handleAddToFavorite = (book: Book) => {
+    dispatch(addToFavorites(book));
+    setPopupMessage(`${book.title} has been added to your favorites!`);
     setSelectedBook(null);
   };
 
   const closeModal = () => {
     setSelectedBook(null);
+  };
+
+  const closePopup = () => {
+    setPopupMessage(null);
   };
 
   return (
@@ -146,7 +366,8 @@ export default function BooksPage() {
       maxWidth: '1400px', 
       margin: '0 auto',
       fontFamily: 'Arial, sans-serif',
-      minHeight: 'calc(100vh - 100px)'
+      minHeight: 'calc(100vh - 100px)',
+      position: 'relative'
     }}>
       <h1 style={{ 
         fontSize: '1.8rem', 
@@ -189,8 +410,8 @@ export default function BooksPage() {
             key={book.id}
             book={book}
             onBookClick={() => handleBookClick(book)}
-            onAddToCart={handleAddToCart}
-            onAddToFavorite={handleAddToFavorite}
+            onAddToCart={() => handleAddToCart(book)}
+            onAddToFavorite={() => handleAddToFavorite(book)}
           />
         ))}
       </div>
@@ -215,7 +436,6 @@ export default function BooksPage() {
         </div>
       )}
 
-      {/* Book Details Modal */}
       {selectedBook && (
         <div style={{
           position: 'fixed',
@@ -311,7 +531,7 @@ export default function BooksPage() {
 
             <div style={{ display: 'flex', gap: '10px' }}>
               <button
-                onClick={() => handleAddToCart(selectedBook.id)}
+                onClick={() => handleAddToCart(selectedBook)}
                 disabled={!selectedBook.inStock}
                 style={{
                   padding: '10px 20px',
@@ -326,7 +546,7 @@ export default function BooksPage() {
                 Add to Cart
               </button>
               <button
-                onClick={() => handleAddToFavorite(selectedBook.id)}
+                onClick={() => handleAddToFavorite(selectedBook)}
                 style={{
                   padding: '10px 20px',
                   backgroundColor: '#f0ad4e',
@@ -342,6 +562,21 @@ export default function BooksPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {popupMessage && (
+        <>
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            zIndex: 1000
+          }} onClick={closePopup} />
+          <Popup message={popupMessage} onClose={closePopup} />
+        </>
       )}
     </div>
   );

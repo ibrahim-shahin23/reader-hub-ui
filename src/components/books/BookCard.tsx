@@ -1,41 +1,13 @@
 import { type Book } from './BooksPage';
-import axios from 'axios';
 
 interface BookCardProps {
   book: Book;
-  onBookClick: (id: string) => void;
-  onAddToCart: (id: string) => void;
-  onAddToFavorite: (id: string) => void;
+  onBookClick: () => void;
+  onAddToCart: () => void;
+  onAddToFavorite: () => void;
 }
 
 export default function BookCard({ book, onBookClick, onAddToCart, onAddToFavorite }: BookCardProps) {
-  const handleAddToFavorite = async (id: string) => {
-    try {
-      // Get the token from localStorage
-      const token = localStorage.getItem('token');
-      //const baseUrl = import.meta.env.VITE_BASE_URL
-      const baseUrl = "http://localhost:3030"
-      console.log("token", token);
-
-      // Make the API call to add to favorites
-      await axios.post(
-        `${baseUrl}/api/auth/favorites/add`,
-        { bookId: id },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        }
-      );
-      
-      // Call the parent component's handler
-      onAddToFavorite(id);
-    } catch (error) {
-      console.error('Error adding book to favorites:', error);
-    }
-  };
-
   return (
     <div 
       style={{ 
@@ -47,7 +19,7 @@ export default function BookCard({ book, onBookClick, onAddToCart, onAddToFavori
         display: 'flex',
         flexDirection: 'column'
       }}
-      onClick={() => onBookClick(book.id)}
+      onClick={onBookClick}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'scale(1.03)';
         e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
@@ -82,7 +54,7 @@ export default function BookCard({ book, onBookClick, onAddToCart, onAddToFavori
           }}
           onClick={(e) => {
             e.stopPropagation();
-            onAddToCart(book.id);
+            onAddToCart();
           }}
         >
           Add to Cart
@@ -98,7 +70,7 @@ export default function BookCard({ book, onBookClick, onAddToCart, onAddToFavori
           }}
           onClick={(e) => {
             e.stopPropagation();
-            handleAddToFavorite(book.id);
+            onAddToFavorite();
           }}
         >
           ♥
