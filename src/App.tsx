@@ -1,5 +1,11 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useLocation,
+} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import Dashboard from './pages/Dashboard';
@@ -18,12 +24,13 @@ import FavoritesPage from './pages/FavoritesPage';
 import ProfilePage from './pages/ProfilePage';
 import Contact from './pages/Contact';
 import About from './pages/About';
+import ChatbotWidget from './components/ChatbotWidget';
 
 function App() {
   return (
     <Provider store={store}>
       <Router>
-        <NavbarComponent/>
+        <NavbarComponent />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -41,7 +48,8 @@ function App() {
           <Route path="/about" element={<About />} />
         </Routes>
         <AppContent />
-        <Footer/>
+        <ChatbotWidget />
+        <Footer />
       </Router>
     </Provider>
   );

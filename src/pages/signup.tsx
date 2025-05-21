@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+// import signupImage from '../assets/adultReader.jpg';
+
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -85,6 +87,11 @@ const Signup: React.FC = () => {
 
   return (
     <div className="container col-12 col-md-6 mt-5">
+      {/* <div className='col-8' >
+        <img src={signupImage} alt="" />
+      </div>
+      <div className='col-4'> */}
+
       <h2>Signup</h2>
       {error && <div className="alert alert-danger">{error}</div>}
       {success && <div className="alert alert-success">{success}</div>}
@@ -183,7 +190,9 @@ const Signup: React.FC = () => {
           {isSubmitting ? 'Signing up...' : 'Signup'}
         </button>
       </form>
-    </div>
+            </div>
+
+    // </div>
   );
 };
 
