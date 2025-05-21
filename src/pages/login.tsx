@@ -1,6 +1,22 @@
 import React, { useState } from 'react';
+import adultReader from '../assets/library2.png'; // Adjust path as needed
 
-const Login: React.FC = () => {
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Alert,
+  Paper,
+  Container,
+  Grid,
+  Link,
+  CircularProgress,
+  useTheme,
+  useMediaQuery
+} from '@mui/material';
+
+const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -9,17 +25,19 @@ const Login: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value
+      [e.target.name]: e.target.value
     });
   };
 
-  const baseUrl = import.meta.env.VITE_BASE_URL
+  const baseUrl = import.meta.env.VITE_BASE_URL;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Basic validation
@@ -45,11 +63,11 @@ const Login: React.FC = () => {
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
-        console.log(errorData)
+        console.log(errorData);
         throw new Error(errorData?.message || 'Login failed');
       }
       const data = await response.json();
-      console.log(data)
+      console.log(data);
 
       // Store token and login status
       if (data.data.token) {
@@ -72,53 +90,84 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="container col-12 col-md-6 mt-5">
-      <h2>Login</h2>
-      {error && <div className="alert alert-danger">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
-      
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email address
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            placeholder="Enter email"
-            value={formData.email}
-            onChange={handleChange}
-            
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control mb-2"
-            id="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            
-          />
-          <div className="d-flex justify-content-between">
-            <a className='me-5' href="signup"><strong>Don't have an account</strong></a>
-            <a href="resetPassword"><strong>Forgot your Password</strong></a>
-          </div>
-        </div>
-        <button 
-          type="submit" 
-          className="btn btn-primary"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
-    </div>
+    <Container maxWidth="lg" sx={{ p:5,  display: 'flex' }}>
+      <Paper elevation={3} sx={{ width: '100%', overflow: 'hidden' }}>
+        <Grid container>
+          {/* Image section - takes 2/3 of the space on larger screens */}
+          {!isMobile && (
+            <Grid item xs={12} md={8} sx={{ height: '80vh' }}>
+              <Box 
+                sx={{ 
+                  height: '100%', 
+                  backgroundImage: `url(${adultReader})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
+              />
+            </Grid>
+          )}
+          
+          {/* Form section - takes 1/3 on larger screens, full width on mobile */}
+          <Grid item xs={12} md={4}>
+            <Box sx={{ p:4, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
+                Login
+              </Typography>
+              
+              {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+              {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+              
+              <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  value={formData.email}
+                  onChange={handleChange}
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1, mb: 2 }}>
+                  <Link href="signup" variant="body2" sx={{ fontWeight: 'bold' }}>
+                    Don't have an account
+                  </Link>
+                  <Link href="resetPassword" variant="body2" sx={{ fontWeight: 'bold' }}>
+                    Forgot your Password
+                  </Link>
+                </Box>
+                
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={isSubmitting}
+                  sx={{ mt: 2, py: 1.5 }}
+                >
+                  {isSubmitting ? <CircularProgress size={24} color="inherit" /> : 'Login'}
+                </Button>
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
+      </Paper>
+    </Container>
   );
 };
 
