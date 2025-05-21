@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import '../styles/home.css';
 import HomeBanner from '../components/Home/HomeBanner';
 import NewReleases from '../components/Home/NewReleases';
