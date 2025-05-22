@@ -20,6 +20,7 @@ interface Book {
   pageCount?: number;
   language?: string;
   publicationDate?: string;
+  rating?: number;
 }
 
 const NewReleases: React.FC = () => {
@@ -43,7 +44,8 @@ const NewReleases: React.FC = () => {
       description: "Alicia Berenson's life is seemingly perfect. A famous painter married to an in-demand fashion photographer, she lives in a grand house with big windows overlooking a park in one of London's most desirable areas. One evening her husband Gabriel returns home late from a fashion shoot, and Alicia shoots him five times in the face, and then never speaks another word.",
       category: "Thriller",
       inStock: true,
-      publicationDate: '2019-02-05'
+      publicationDate: '2019-02-05',
+      rating: 4.5
     },
     {
       id: 'nr2',
@@ -55,7 +57,8 @@ const NewReleases: React.FC = () => {
       description: "In the house of Helios, god of the sun and mightiest of the Titans, a daughter is born. But Circe is a strange child—not powerful, like her father, nor viciously alluring, like her mother. Turning to the world of mortals, she discovers her true power—witchcraft—and transforms rivals, and even gods, into monsters.",
       category: "Mythology",
       inStock: true,
-      publicationDate: '2018-04-10'
+      publicationDate: '2018-04-10',
+      rating: 4.8
     },
     {
       id: 'nr3',
@@ -67,7 +70,8 @@ const NewReleases: React.FC = () => {
       description: "The Vignes twin sisters will always be identical. But after growing up together in a small, southern black community and running away at sixteen, it's not just the shape of their daily lives that divides them, but everything: their families, their communities, their very identities.",
       category: "Literary Fiction",
       inStock: true,
-      publicationDate: '2020-06-02'
+      publicationDate: '2020-06-02',
+      rating: 4.6
     },
     {
       id: 'nr4',
@@ -79,7 +83,8 @@ const NewReleases: React.FC = () => {
       description: "The wedding of the year. The island of a lifetime. A mystery that unravels. On a remote island off the coast of Ireland, guests gather for a wedding. But someone doesn't make it to the reception. Someone is dead. And everyone is a suspect.",
       category: "Mystery",
       inStock: true,
-      publicationDate: '2020-02-20'
+      publicationDate: '2020-02-20',
+      rating: 4.2
     },
     {
       id: 'nr5',
@@ -91,7 +96,8 @@ const NewReleases: React.FC = () => {
       description: "No matter your goals, Atomic Habits offers a proven framework for improving every day. James Clear, one of the world's leading experts on habit formation, reveals practical strategies that will teach you exactly how to form good habits, break bad ones, and master the tiny behaviors that lead to remarkable results.",
       category: "Self-Help",
       inStock: true,
-      publicationDate: '2018-10-16'
+      publicationDate: '2018-10-16',
+      rating: 4.7
     },
   ];
 
@@ -151,7 +157,14 @@ const NewReleases: React.FC = () => {
           boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
           border: 'none',
           borderRadius: '12px',
-          transition: 'all 0.3s ease'
+          transition: 'all 0.3s ease',
+          // Responsive adjustment for mobile
+          '@media (max-width: 768px)': {
+            top: '10px',
+            left: '10px',
+            right: '10px',
+            maxWidth: 'none', // Allow it to take full width
+          }
         }}
       >
         <div className="d-flex align-items-center">
@@ -166,14 +179,14 @@ const NewReleases: React.FC = () => {
         {newReleaseBooks.map((book) => (
           <Col key={book.id}>
             <Card 
-              className="h-100 shadow-sm overflow-hidden" // Removed border-0 from here
+              className="h-100 shadow-sm overflow-hidden" 
               onClick={() => handleCardClick(book)}
               style={{ 
                 cursor: 'pointer',
                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                 transform: hoveredCard === book.id ? 'translateY(-5px)' : 'none',
                 borderRadius: '12px',
-                border: '1px solid #e0e0e0' // Added a subtle light grey border here
+                border: '1px solid #e0e0e0'
               }}
               onMouseEnter={() => setHoveredCard(book.id)}
               onMouseLeave={() => setHoveredCard(null)}
@@ -183,7 +196,7 @@ const NewReleases: React.FC = () => {
                 src={book.coverImage} 
                 alt={book.title} 
                 style={{ 
-                  height: '250px', 
+                  height: '250px', // Fixed height for consistency in grid
                   objectFit: 'cover',
                   borderBottom: '1px solid rgba(0,0,0,0.1)'
                 }} 
@@ -191,6 +204,7 @@ const NewReleases: React.FC = () => {
               <Card.Body className="d-flex flex-column p-3">
                 <Card.Title className="fs-6 fw-bold mb-1">{book.title}</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted small">{book.author}</Card.Subtitle>
+                <p className="text-muted small">Publisher: {book.publisher}</p> {/* Display publisher */}
                 <div className="mt-auto">
                   <div className="d-flex justify-content-between align-items-center">
                     <span className="fw-bold text-primary fs-5">${book.price.toFixed(2)}</span>
@@ -285,6 +299,24 @@ const NewReleases: React.FC = () => {
                       <span className="fw-semibold">Published:</span> {new Date(selectedBook.publicationDate).toLocaleDateString()}
                     </p>
                   )}
+                  {selectedBook.pageCount && ( // Added pageCount display
+                    <p className="text-muted mb-1">
+                      <span className="fw-semibold">Pages:</span> {selectedBook.pageCount}
+                    </p>
+                  )}
+                  {selectedBook.language && ( // Added language display
+                    <p className="text-muted mb-1">
+                      <span className="fw-semibold">Language:</span> {selectedBook.language}
+                    </p>
+                  )}
+                  {selectedBook.rating && ( // Added rating display
+                    <p className="text-muted mb-1">
+                      <span className="fw-semibold">Rating:</span> {selectedBook.rating}/5
+                    </p>
+                  )}
+                  <p className="text-muted mb-1" style={{ color: selectedBook.inStock ? 'green' : 'red' }}>
+                    <span className="fw-semibold">Availability:</span> {selectedBook.inStock ? 'In Stock' : 'Out of Stock'}
+                  </p>
                 </div>
                 
                 <p className="mt-3 mb-4" style={{ lineHeight: '1.6' }}>{selectedBook.description}</p>
@@ -298,6 +330,7 @@ const NewReleases: React.FC = () => {
                     variant="primary" 
                     size="lg" 
                     onClick={() => handleAddToCart(selectedBook)}
+                    disabled={!selectedBook.inStock} // Disable if out of stock
                     className="flex-grow-1 d-flex align-items-center justify-content-center"
                     style={{ borderRadius: '8px' }}
                   >

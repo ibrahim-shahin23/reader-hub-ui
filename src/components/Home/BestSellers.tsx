@@ -37,7 +37,7 @@ const BestSellers: React.FC = () => {
   const [alertVariant, setAlertVariant] = useState<'success' | 'info'>('success');
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
-  // Mock data for best sellers
+  // Mock data for best sellers - ensures all fields are present for modal
   const bestSellers: Book[] = [
     {
       id: '1',
@@ -49,7 +49,8 @@ const BestSellers: React.FC = () => {
       price: 27.99,
       rating: 4.8,
       category: "Self-Help",
-      publicationDate: '2018-10-16'
+      publicationDate: '2018-10-16',
+      inStock: true, pageCount: 320, language: 'English'
     },
     {
       id: '2',
@@ -61,7 +62,8 @@ const BestSellers: React.FC = () => {
       price: 23.99,
       rating: 4.7,
       category: "Finance",
-      publicationDate: '2020-09-08'
+      publicationDate: '2020-09-08',
+      inStock: true, pageCount: 256, language: 'English'
     },
     {
       id: '3',
@@ -73,7 +75,8 @@ const BestSellers: React.FC = () => {
       price: 19.99,
       rating: 4.6,
       category: "Business",
-      publicationDate: '2012-09-05'
+      publicationDate: '2012-09-05',
+      inStock: true, pageCount: 288, language: 'English'
     },
     {
       id: '4',
@@ -85,7 +88,8 @@ const BestSellers: React.FC = () => {
       price: 25.50,
       rating: 4.7,
       category: "Self-Help",
-      publicationDate: '1998-09-01'
+      publicationDate: '1998-09-01',
+      inStock: true, pageCount: 452, language: 'English'
     },
     {
       id: '5',
@@ -97,7 +101,8 @@ const BestSellers: React.FC = () => {
       price: 22.99,
       rating: 4.5,
       category: "Self-Help",
-      publicationDate: '2016-09-13'
+      publicationDate: '2016-09-13',
+      inStock: true, pageCount: 224, language: 'English'
     }
   ];
 
@@ -159,7 +164,14 @@ const BestSellers: React.FC = () => {
           boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
           border: 'none',
           borderRadius: '12px',
-          transition: 'all 0.3s ease'
+          transition: 'all 0.3s ease',
+          // Responsive adjustment for mobile
+          '@media (max-width: 768px)': {
+            top: '10px',
+            left: '10px',
+            right: '10px',
+            maxWidth: 'none', // Allow it to take full width
+          }
         }}
       >
         <div className="d-flex align-items-center">
@@ -174,14 +186,14 @@ const BestSellers: React.FC = () => {
         {bestSellers.map((book) => (
           <Col key={book.id}>
             <Card 
-              className="h-100 shadow-sm overflow-hidden" // Removed border-0 from here
+              className="h-100 shadow-sm overflow-hidden" 
               onClick={() => handleCardClick(book)}
               style={{ 
                 cursor: 'pointer',
                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                 transform: hoveredCard === book.id ? 'translateY(-5px)' : 'none', 
                 borderRadius: '12px',
-                border: '1px solid #e0e0e0' // Added border here
+                border: '1px solid #e0e0e0'
               }}
               onMouseEnter={() => setHoveredCard(book.id)}
               onMouseLeave={() => setHoveredCard(null)}
@@ -191,7 +203,7 @@ const BestSellers: React.FC = () => {
                 src={book.coverImage} 
                 alt={book.title} 
                 style={{ 
-                  height: '250px', 
+                  height: '250px', // Fixed height for consistency in grid
                   objectFit: 'cover',
                   borderBottom: '1px solid rgba(0,0,0,0.1)' 
                 }} 
@@ -298,6 +310,24 @@ const BestSellers: React.FC = () => {
                       <span className="fw-semibold">Published:</span> {new Date(selectedBook.publicationDate).toLocaleDateString()}
                     </p>
                   )}
+                  {selectedBook.pageCount && ( // Added pageCount display
+                    <p className="text-muted mb-1">
+                      <span className="fw-semibold">Pages:</span> {selectedBook.pageCount}
+                    </p>
+                  )}
+                  {selectedBook.language && ( // Added language display
+                    <p className="text-muted mb-1">
+                      <span className="fw-semibold">Language:</span> {selectedBook.language}
+                    </p>
+                  )}
+                  {selectedBook.rating && ( // Added rating display
+                    <p className="text-muted mb-1">
+                      <span className="fw-semibold">Rating:</span> {selectedBook.rating}/5
+                    </p>
+                  )}
+                  <p className="text-muted mb-1" style={{ color: selectedBook.inStock ? 'green' : 'red' }}>
+                    <span className="fw-semibold">Availability:</span> {selectedBook.inStock ? 'In Stock' : 'Out of Stock'}
+                  </p>
                 </div>
                 
                 <p className="mt-3 mb-4" style={{ lineHeight: '1.6' }}>{selectedBook.description}</p>
@@ -311,6 +341,7 @@ const BestSellers: React.FC = () => {
                     variant="primary" 
                     size="lg" 
                     onClick={() => handleAddToCart(selectedBook)}
+                    disabled={!selectedBook.inStock} // Disable if out of stock
                     className="flex-grow-1 d-flex align-items-center justify-content-center"
                     style={{ borderRadius: '8px' }}
                   >

@@ -343,13 +343,13 @@ export default function BooksPage() {
   const handleAddToCart = (book: Book) => {
     dispatch(addBookToCart(book));
     setPopupMessage(`${book.title} has been added to your cart!`);
-    setSelectedBook(null);
+    setSelectedBook(null); // Close modal after adding to cart
   };
 
   const handleAddToFavorite = (book: Book) => {
     dispatch(addToFavorites(book));
     setPopupMessage(`${book.title} has been added to your favorites!`);
-    setSelectedBook(null);
+    setSelectedBook(null); // Close modal after adding to favorites
   };
 
   const closeModal = () => {
@@ -364,7 +364,7 @@ export default function BooksPage() {
     <div style={{ 
       padding: '15px', 
       maxWidth: '1400px', 
-      margin: '0 auto',
+      margin: '0 auto 50px auto', // Changed this line: added 50px bottom margin
       fontFamily: 'Arial, sans-serif',
       minHeight: 'calc(100vh - 100px)',
       position: 'relative'
@@ -375,7 +375,7 @@ export default function BooksPage() {
         textAlign: 'center',
         color: '#2c3e50'
       }}>
-        Our Book Collection ({filteredBooks.length} books)
+        Our Book Collection
       </h1>
       
       <div style={{ 
@@ -480,7 +480,15 @@ export default function BooksPage() {
               </button>
             </div>
 
-            <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+            {/* Adjusted for mobile responsiveness: image and details stack vertically */}
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column', /* Stack items vertically for mobile */
+              alignItems: 'center',    /* Center items when stacked */
+              gap: '20px', 
+              marginBottom: '20px',
+              textAlign: 'center'      /* Center text within details block */
+            }}>
               <img 
                 src={selectedBook.coverImage} 
                 alt={selectedBook.title}
@@ -488,10 +496,12 @@ export default function BooksPage() {
                   width: '180px',
                   height: '240px',
                   objectFit: 'cover',
-                  borderRadius: '5px'
+                  borderRadius: '5px',
+                  maxWidth: '100%', /* Ensure image scales down on smaller screens */
+                  flexShrink: 0
                 }}
               />
-              <div>
+              <div style={{ flex: 1, minWidth: 'auto' }}> {/* Details section, allows content to wrap */}
                 <p style={{ margin: '0 0 10px', fontSize: '1.1rem' }}>
                   <strong>Author:</strong> {selectedBook.author}
                 </p>
@@ -529,7 +539,13 @@ export default function BooksPage() {
               <p style={{ margin: 0, lineHeight: '1.5' }}>{selectedBook.description}</p>
             </div>
 
-            <div style={{ display: 'flex', gap: '10px' }}>
+            {/* Buttons stack vertically for mobile */}
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column', /* Stack buttons vertically for mobile */
+              gap: '10px',
+              width: '100%' /* Ensure buttons take full width when stacked */
+            }}>
               <button
                 onClick={() => handleAddToCart(selectedBook)}
                 disabled={!selectedBook.inStock}
@@ -540,7 +556,8 @@ export default function BooksPage() {
                   border: 'none',
                   borderRadius: '5px',
                   cursor: selectedBook.inStock ? 'pointer' : 'not-allowed',
-                  fontSize: '1rem'
+                  fontSize: '1rem',
+                  width: '100%' /* Make buttons fill width */
                 }}
               >
                 Add to Cart
@@ -554,7 +571,8 @@ export default function BooksPage() {
                   border: 'none',
                   borderRadius: '5px',
                   cursor: 'pointer',
-                  fontSize: '1rem'
+                  fontSize: '1rem',
+                  width: '100%' /* Make buttons fill width */
                 }}
               >
                 Add to Favorites

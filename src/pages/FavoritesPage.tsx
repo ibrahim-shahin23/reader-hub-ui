@@ -46,7 +46,10 @@ const FavoritesPage = () => {
   const handleCloseModal = () => setShowModal(false);
 
   return (
-    <Container className="my-5">
+    <Container 
+      className="mb-5" // Kept mb-5 for consistency with bottom margin
+      style={{ marginTop: '70px' }} // Added 70px margin to the top of the container
+    >
       <h2 className="mb-4">Your Favorite Books</h2>
       
       {/* General Purpose Confirmation Modal */}
