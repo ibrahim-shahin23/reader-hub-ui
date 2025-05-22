@@ -37,7 +37,7 @@ const ProfilePage = () => {
       
       reader.onload = (event: ProgressEvent<FileReader>) => {
         if (event.target && event.target.result && typeof event.target.result === 'string') {
-          setProfile(prev => ({ ...prev, image: event.target.result }));
+          setProfile(prev => ({ ...prev, image: event?.target?.result as string }));
         }
       };
       
@@ -70,7 +70,7 @@ const ProfilePage = () => {
     <div style={styles.container}>
       <h1 style={styles.header}>Profile Settings</h1>
       
-      <form onSubmit={handleSubmit}>
+      <div>
         <div style={styles.profileImageContainer}>
           <div style={styles.avatarWrapper}>
             {profile.image ? (
@@ -155,10 +155,11 @@ const ProfilePage = () => {
 
         <div style={styles.buttonContainer}>
           <button 
-            type="submit" 
+            type="button"
             style={styles.saveButton}
             disabled={isSaving}
             aria-busy={isSaving}
+            onClick={handleSubmit}
           >
             {isSaving ? 'Saving...' : 'Save Changes'}
           </button>
@@ -168,7 +169,7 @@ const ProfilePage = () => {
             </div>
           )}
         </div>
-      </form>
+      </div>
     </div>
   );
 };
@@ -222,10 +223,7 @@ const styles = {
     borderRadius: '6px',
     cursor: 'pointer',
     fontSize: '14px',
-    transition: 'background-color 0.2s',
-    ':hover': {
-      backgroundColor: '#e0e0e0'
-    }
+    transition: 'background-color 0.2s'
   },
   formGroup: {
     marginBottom: '24px'
@@ -244,12 +242,7 @@ const styles = {
     border: '1px solid #ddd',
     borderRadius: '6px',
     boxSizing: 'border-box' as const,
-    transition: 'border-color 0.2s',
-    ':focus': {
-      outline: 'none',
-      borderColor: '#4CAF50',
-      boxShadow: '0 0 0 2px rgba(76, 175, 80, 0.2)'
-    }
+    transition: 'border-color 0.2s'
   },
   buttonContainer: {
     marginTop: '30px',
@@ -267,14 +260,7 @@ const styles = {
     fontSize: '16px',
     cursor: 'pointer',
     fontWeight: '600' as const,
-    transition: 'background-color 0.2s',
-    ':hover': {
-      backgroundColor: '#3d8b40'
-    },
-    ':disabled': {
-      backgroundColor: '#a5d6a7',
-      cursor: 'not-allowed'
-    }
+    transition: 'background-color 0.2s'
   },
   successMessage: {
     padding: '12px',

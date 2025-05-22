@@ -1,5 +1,4 @@
 import React from 'react';
-import '../styles/home.css';
 import HomeBanner from '../components/Home/HomeBanner';
 import NewReleases from '../components/Home/NewReleases';
 import AIRecommendations from '../components/Home/AIRecommendations';
@@ -7,7 +6,7 @@ import BestSellers from '../components/Home/BestSellers';
 
 const Home: React.FC = () => {
   return (
-    <div className="home-page">
+    <div style={{ overflowX: 'hidden' }}>
       <HomeBanner />
       <AIRecommendations />
       <NewReleases />

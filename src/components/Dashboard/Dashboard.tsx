@@ -30,6 +30,8 @@ const theme = createTheme({
   },
 });
 
+console.log(theme)
+
 const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('users');
   const theme = useTheme();

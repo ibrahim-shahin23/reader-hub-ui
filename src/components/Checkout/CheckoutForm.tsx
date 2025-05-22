@@ -1,5 +1,4 @@
-import React from 'react';
-import { Card, Form, Button, Row, Col } from 'react-bootstrap';
+import { Card, Form, Row, Col } from 'react-bootstrap';
 
 const CheckoutForm = () => {
   return (

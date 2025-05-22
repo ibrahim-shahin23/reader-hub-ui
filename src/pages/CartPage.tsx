@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, Row, Col, Button, Form, Card, Image } from 'react-bootstrap';
 import { FaPlus, FaMinus, FaTrash } from 'react-icons/fa';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';

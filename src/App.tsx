@@ -1,10 +1,7 @@
-import React from 'react';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
-  useLocation,
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
@@ -47,7 +44,6 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
         </Routes>
-        <AppContent />
         <ChatbotWidget />
         <Footer />
       </Router>
@@ -55,32 +51,6 @@ function App() {
   );
 }
 
-const AppContent: React.FC = () => {
-  const location = useLocation();
 
-  return (
-    <>
-      {location.pathname === '/' && (
-        <div style={{ textAlign: 'center', marginTop: '30px' }}>
-          <Link to="/dashboard">
-            <button
-              style={{
-                padding: '10px 20px',
-                fontSize: '16px',
-                backgroundColor: '#007bff',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-              }}
-            >
-              DASHBOARD
-            </button>
-          </Link>
-        </div>
-      )}
-    </>
-  );
-};
 
 export default App;

@@ -14,13 +14,16 @@ interface Book {
   coverImage: string;
   price: number;
   inStock: boolean;
+  category: string;
+  pageCount: number;
+  language?: string;
+  rating: number;
 }
 
 const AIRecommendations: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   
-  // Get favorites and cart from Redux store
   const favoriteBooks = useAppSelector((state) => state.favorites.books);
   const cartItems = useAppSelector((state) => state.cart.items);
   
@@ -30,6 +33,7 @@ const AIRecommendations: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState<'cart' | 'favorites' | 'removed'>('cart');
 
+  console.log(alertType)
   const recommendedBooks: Book[] = [
     {
       id: '1',
@@ -39,7 +43,9 @@ const AIRecommendations: React.FC = () => {
       description: 'A comprehensive guide to the AI revolution and its impact on society, business, and technology.',
       coverImage: 'https://books.google.com.eg/books/publisher/content?id=ziZAEQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE737U_W8o4mfIUDGH_zuaFnq3LP6EqAEj46JCEH5stTGQIbJ6ZdKdgoI65QmWF-v1m8dWseG1z0sj09flGdmhk6YrtGUy0DIaQrA_YTGwZHqeQeeEbGl5ysw619_PlXxwiLJuCyh',
       price: 28.99,
-      inStock: true
+      inStock: true,
+      category: 'AI & Technology',
+      pageCount: 400, language: 'English', rating: 4.5
     },
     {
       id: '2',
@@ -49,7 +55,9 @@ const AIRecommendations: React.FC = () => {
       description: 'Fundamentals of machine learning algorithms and their practical applications in various fields.',
       coverImage: 'https://printrado.com/wp-content/uploads/2025/01/Google-Machine-Learning-and-Generative-AI-for-Solutions-Architects-768x947.jpg.webp',
       price: 24.50,
-      inStock: true
+      inStock: true,
+      category: 'AI & Technology',
+      pageCount: 250, language: 'English', rating: 4.7
     },
     {
       id: '3',
@@ -59,7 +67,9 @@ const AIRecommendations: React.FC = () => {
       description: 'Detailed exploration of neural network architectures and their implementation in modern AI systems.',
       coverImage: 'https://images-na.ssl-images-amazon.com/images/I/61fim5QqaqL._SX373_BO1,204,203,200_.jpg',
       price: 26.75,
-      inStock: true
+      inStock: true,
+      category: 'AI & Technology',
+      pageCount: 700, language: 'English', rating: 4.8
     },
     {
       id: '4',
@@ -69,7 +79,9 @@ const AIRecommendations: React.FC = () => {
       description: 'A visionary look at how artificial intelligence will shape our future in the coming decades.',
       coverImage: 'https://images-na.ssl-images-amazon.com/images/I/51Zymoq7UnL._SX325_BO1,204,203,200_.jpg',
       price: 29.99,
-      inStock: true
+      inStock: true,
+      category: 'AI & Technology',
+      pageCount: 380, language: 'English', rating: 4.6
     },
     {
       id: '5',
@@ -79,75 +91,40 @@ const AIRecommendations: React.FC = () => {
       description: 'The definitive textbook on deep learning methods and their theoretical foundations.',
       coverImage: 'https://printrado.com/wp-content/uploads/2025/02/Introduction-to-Artificial-Intelligence-679x1030.jpg.webp',
       price: 32.50,
-      inStock: true
+      inStock: true,
+      category: 'AI & Technology',
+      pageCount: 350, language: 'English', rating: 4.9 
     }
   ];
 
-  // Check if a book is in favorites
   const isBookInFavorites = (bookId: string) => {
     return favoriteBooks.some(book => book.id === bookId);
   };
 
-  // Check if a book is in cart
   const isBookInCart = (bookId: string) => {
     return cartItems.some(item => item.id === bookId);
   };
 
-  // Handle adding book to cart
   const handleAddToCart = (book: Book, event?: React.MouseEvent) => {
     if (event) {
       event.stopPropagation();
     }
-
-    // Convert Book to the format expected by Redux
-    const bookForCart = {
-      id: book.id,
-      title: book.title,
-      author: book.author,
-      publisher: book.publisher,
-      price: book.price,
-      coverImage: book.coverImage,
-      description: book.description,
-      inStock: book.inStock,
-      category: 'AI & Technology',
-      pageCount: 300,
-      language: 'English',
-      rating: 4.5
-    };
-
-    dispatch(addBookToCart(bookForCart));
+    dispatch(addBookToCart(book));
     setAlertMessage(`${book.title} has been added to your cart!`);
     setAlertType('cart');
     setShowSuccessAlert(true);
   };
 
-  // Handle adding/removing book from favorites
   const handleToggleFavorites = (book: Book, event?: React.MouseEvent) => {
     if (event) {
       event.stopPropagation();
     }
-
-    const bookForFavorites = {
-      id: book.id,
-      title: book.title,
-      author: book.author,
-      publisher: book.publisher,
-      price: book.price,
-      coverImage: book.coverImage,
-      description: book.description,
-      inStock: book.inStock,
-      category: 'AI & Technology',
-      pageCount: 300,
-      language: 'English',
-      rating: 4.5
-    };
-
     if (isBookInFavorites(book.id)) {
       dispatch(removeFromFavorites(book.id));
       setAlertMessage(`${book.title} has been removed from your favorites.`);
       setAlertType('removed');
     } else {
-      dispatch(addToFavorites(bookForFavorites));
+      dispatch(addToFavorites(book));
       setAlertMessage(`${book.title} has been added to your favorites!`);
       setAlertType('favorites');
     }
@@ -202,7 +179,7 @@ const AIRecommendations: React.FC = () => {
     },
     gridContainer: {
       width: '100%',
-      overflowX: 'auto',
+      overflowX: 'auto' as const, 
       paddingBottom: '1rem',
       '@media (max-width: 768px)': {
         paddingBottom: '0.5rem'
@@ -214,8 +191,8 @@ const AIRecommendations: React.FC = () => {
       gap: '1.5rem',
       padding: '0 1rem',
       margin: '0 auto',
-      width: 'fit-content',
-      minWidth: '100%',
+      width: 'fit-content', 
+      minWidth: '100%', 
       '@media (max-width: 1200px)': {
         gridTemplateColumns: 'repeat(4, minmax(180px, 1fr))'
       },
@@ -241,10 +218,7 @@ const AIRecommendations: React.FC = () => {
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       border: '1px solid rgba(255,255,255,0.2)',
       transform: 'translateY(0)',
-      '&:hover': {
-        transform: 'translateY(-8px)',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.1)'
-      },
+
       '@media (max-width: 768px)': {
         borderRadius: '12px'
       }
@@ -297,11 +271,11 @@ const AIRecommendations: React.FC = () => {
       fontSize: '1.125rem',
       fontWeight: '700' as const,
       color: '#2563eb',
-      margin: '0.75rem 0 1rem',
       background: 'linear-gradient(135deg, #2563eb, #3b82f6)',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
       backgroundClip: 'text',
+      margin: '0.75rem 0 1rem',
       '@media (max-width: 768px)': {
         fontSize: '1rem',
         margin: '0.5rem 0'
@@ -364,10 +338,6 @@ const AIRecommendations: React.FC = () => {
       transition: 'all 0.3s ease',
       boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
       backdropFilter: 'blur(10px)',
-      '&:hover': {
-        transform: 'translateY(-2px)',
-        boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
-      },
       '@media (max-width: 768px)': {
         padding: '0.875rem 1.75rem',
         fontSize: '0.9375rem',
@@ -386,15 +356,16 @@ const AIRecommendations: React.FC = () => {
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 1000,
-      animation: 'fadeIn 0.3s ease'
+      '@media (max-width: 768px)': {
+      }
     },
     modalContent: {
       backgroundColor: '#ffffff',
       borderRadius: '20px',
       padding: '2.5rem',
       maxWidth: '600px',
-      width: '90%',
-      maxHeight: '90vh',
+      width: '90%', 
+      maxHeight: '90vh', 
       overflowY: 'auto' as const,
       position: 'relative' as const,
       boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
@@ -432,7 +403,7 @@ const AIRecommendations: React.FC = () => {
       height: '280px',
       objectFit: 'cover' as const,
       margin: '0 auto 1.5rem',
-      display: 'block',
+      display: 'block', 
       borderRadius: '12px',
       boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
       '@media (max-width: 768px)': {
@@ -489,7 +460,9 @@ const AIRecommendations: React.FC = () => {
       borderTop: '1px solid #e2e8f0',
       '@media (max-width: 768px)': {
         marginTop: '1.5rem',
-        paddingTop: '1rem'
+        paddingTop: '1rem',
+        flexDirection: 'column' as const, 
+        gap: '1rem', 
       }
     },
     modalPrice: {
@@ -500,14 +473,17 @@ const AIRecommendations: React.FC = () => {
       WebkitTextFillColor: 'transparent',
       backgroundClip: 'text',
       '@media (max-width: 768px)': {
-        fontSize: '1.25rem'
+        fontSize: '1.25rem',
+        marginBottom: '1rem', 
       }
     },
     modalIcons: {
       display: 'flex',
       gap: '1rem',
       '@media (max-width: 768px)': {
-        gap: '0.75rem'
+        gap: '0.75rem',
+        width: '100%',
+        justifyContent: 'center', 
       }
     },
     modalIconButton: {
@@ -544,12 +520,11 @@ const AIRecommendations: React.FC = () => {
       backgroundColor: '#ef4444',
       color: '#ffffff'
     },
-    alert: {
+    alert: { 
       position: 'fixed' as const,
       top: '10vh',
       right: '20px',
       backgroundColor: '#ffffff',
-      border: 'none',
       borderRadius: '12px',
       padding: '1rem 1.5rem',
       boxShadow: '0 10px 40px rgba(0, 0, 0, 0.15), 0 4px 20px rgba(0, 0, 0, 0.1)',
@@ -558,13 +533,12 @@ const AIRecommendations: React.FC = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      animation: 'slideIn 0.3s ease',
       backdropFilter: 'blur(20px)',
       border: '1px solid rgba(255,255,255,0.2)',
       '@media (max-width: 768px)': {
-        top: '5vh',
+        top: '5vh', 
         right: '10px',
-        left: '10px',
+        left: '10px', 
         maxWidth: 'none',
         padding: '0.875rem 1.25rem'
       }
@@ -678,9 +652,12 @@ const AIRecommendations: React.FC = () => {
                   <button 
                     style={{
                       ...styles.modalIconButton,
-                      ...(isBookInCart(selectedBook.id) ? styles.modalCartButtonActive : styles.modalCartButton)
+                      ...(selectedBook.inStock && isBookInCart(selectedBook.id) ? styles.modalCartButtonActive : styles.modalCartButton), // Only active if in stock and in cart
+                      cursor: selectedBook.inStock ? 'pointer' : 'not-allowed', // Make cursor indicate disabled
+                      opacity: selectedBook.inStock ? 1 : 0.6, // Dim if disabled
                     }} 
                     onClick={() => handleAddToCart(selectedBook)}
+                    disabled={!selectedBook.inStock} // Disable if out of stock
                   >
                     <FaShoppingCart />
                   </button>
@@ -694,6 +671,16 @@ const AIRecommendations: React.FC = () => {
                     <FaHeart />
                   </button>
                 </div>
+              </div>
+              {/* Added more details for consistency with BooksPage modal */}
+              <div style={{ textAlign: 'left', marginTop: '1rem', color: '#475569', fontSize: '0.9rem' }}>
+                <p><strong>Category:</strong> {selectedBook.category || 'N/A'}</p>
+                <p><strong>Pages:</strong> {selectedBook.pageCount || 'N/A'}</p>
+                <p><strong>Language:</strong> {selectedBook.language || 'N/A'}</p>
+                <p style={{ color: selectedBook.inStock ? 'green' : 'red' }}>
+                  <strong>Availability:</strong> {selectedBook.inStock ? 'In Stock' : 'Out of Stock'}
+                </p>
+                {selectedBook.rating && <p><strong>Rating:</strong> {selectedBook.rating}/5</p>}
               </div>
             </div>
           </div>

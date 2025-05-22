@@ -1,23 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bannerImage from '../../assets/bannerImage.png';
 
 const HomeBanner: React.FC = () => {
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(false); 
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkIsMobile();
+
+    window.addEventListener('resize', checkIsMobile);
+
+    return () => {
+      window.removeEventListener('resize', checkIsMobile);
+    };
+  }, []);
 
   const styles = {
     banner: {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      padding: '0 0',
+      padding: '0',
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      margin: '0 0',
+      margin: '0',
       flexWrap: 'wrap' as const,
       width: '100%',
-      height: '85vh',
-      marginLeft: 'calc(50% - 50vw)',
-      marginRight: 'calc(50% - 50vw)',
+      height: '90vh',
       borderRadius: '0',
       boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
       position: 'relative' as const,
@@ -30,7 +43,8 @@ const HomeBanner: React.FC = () => {
       flexWrap: 'wrap' as const,
       maxWidth: '1200px',
       margin: '0 auto',
-      width: '100%'
+      width: '100%',
+      padding: '2rem 1rem',
     },
     backgroundPattern: {
       position: 'absolute' as const,
@@ -108,7 +122,8 @@ const HomeBanner: React.FC = () => {
       alignItems: 'center',
       padding: '2rem',
       position: 'relative' as const,
-      zIndex: 2
+      zIndex: 2,
+
     },
     image: {
       maxWidth: '100%',
@@ -118,6 +133,7 @@ const HomeBanner: React.FC = () => {
       filter: 'drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2))',
       transition: 'transform 0.3s ease'
     },
+
     '@media (max-width: 768px)': {
       banner: {
         padding: '3rem 1.5rem',
@@ -131,7 +147,7 @@ const HomeBanner: React.FC = () => {
         marginBottom: '2rem'
       },
       imageContainer: {
-        padding: '1rem'
+        padding: '1rem',
       },
       heading: {
         marginBottom: '1rem'
@@ -170,7 +186,6 @@ const HomeBanner: React.FC = () => {
 
   return (
     <div style={styles.banner}>
-      <div style={styles.backgroundPattern}></div>
       
       <div style={styles.container}>
         <div style={styles.content}>
@@ -189,7 +204,12 @@ const HomeBanner: React.FC = () => {
           </button>
         </div>
         
-        <div style={styles.imageContainer}>
+        <div 
+          style={{ 
+            ...styles.imageContainer, 
+            ...(isMobile ? { display: 'none' } : {}) // Hide image on mobile
+          }}
+        >
           <img 
             src={bannerImage} 
             alt="Book fair illustration" 
