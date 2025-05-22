@@ -1,58 +1,64 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Alert, Modal, Button } from 'react-bootstrap';
+import { Container, Row, Col, Modal, Button } from 'react-bootstrap';
 import FavoritesBookCard from '../components/FavoritesBookCard';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { removeFromFavorites } from '../redux/slices/favoritesSlice';
-import { addToCart } from '../redux/slices/cartSlice';
+import { addBookToCart } from '../redux/slices/cartSlice'; 
+interface Book { 
+  id: string;
+  title: string;
+  author: string;
+  publisher?: string; 
+  price: number;
+  coverImage: string;
+  description?: string; 
+  category?: string;
+  inStock?: boolean;
+  pageCount?: number;
+  language?: string;
+  rating?: number;
+  discount?: number;
+  publicationDate?: string;
+}
 
 const FavoritesPage = () => {
   const dispatch = useAppDispatch();
   const favoriteBooks = useAppSelector((state) => state.favorites.books);
-  const [showAddToCartAlert, setShowAddToCartAlert] = useState(false);
-  const [showRemoveAlert, setShowRemoveAlert] = useState(false);
-  const [currentBookTitle, setCurrentBookTitle] = useState('');
+  
+  const [showModal, setShowModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
 
   const handleRemoveFavorite = (bookId: string, bookTitle: string) => {
     dispatch(removeFromFavorites(bookId));
-    setCurrentBookTitle(bookTitle);
-    setShowRemoveAlert(true);
+    setModalTitle('Removed');
+    setModalMessage(`${bookTitle} has been removed from your favorites.`);
+    setShowModal(true);
   };
 
-  const handleAddToCart = (book: any) => {
-    dispatch(addToCart(book));
-    setCurrentBookTitle(book.title);
-    setShowAddToCartAlert(true);
+  const handleAddToCart = (book: Book) => {
+    dispatch(addBookToCart(book));
+    setModalTitle('Success');
+    setModalMessage(`${book.title} has been added to your cart!`);
+    setShowModal(true);
   };
+
+  const handleCloseModal = () => setShowModal(false);
 
   return (
     <Container className="my-5">
       <h2 className="mb-4">Your Favorite Books</h2>
       
-      {/* Add to Cart Success Modal */}
-      <Modal show={showAddToCartAlert} onHide={() => setShowAddToCartAlert(false)} centered>
+      {/* General Purpose Confirmation Modal */}
+      <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Success</Modal.Title>
+          <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>{currentBookTitle} has been added to your cart!</p>
+          <p>{modalMessage}</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={() => setShowAddToCartAlert(false)}>
-            OK
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* Remove from Favorites Success Modal */}
-      <Modal show={showRemoveAlert} onHide={() => setShowRemoveAlert(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Removed</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>{currentBookTitle} has been removed from your favorites.</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={() => setShowRemoveAlert(false)}>
+          <Button variant="primary" onClick={handleCloseModal}>
             OK
           </Button>
         </Modal.Footer>
@@ -62,6 +68,7 @@ const FavoritesPage = () => {
         <div className="text-center py-5">
           <h4>Your favorites list is empty</h4>
           <p>Browse our collection and add books to your favorites!</p>
+          <Button variant="primary" href="/">Go to Homepage</Button> {/* Link to homepage */}
         </div>
       ) : (
         <Row>

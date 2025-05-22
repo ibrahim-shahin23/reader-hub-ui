@@ -15,7 +15,7 @@ const HomeBanner: React.FC = () => {
       margin: '0 0',
       flexWrap: 'wrap' as const,
       width: '100%',
-      height: '85vh',
+      height: '90vh',
       marginLeft: 'calc(50% - 50vw)',
       marginRight: 'calc(50% - 50vw)',
       borderRadius: '0',

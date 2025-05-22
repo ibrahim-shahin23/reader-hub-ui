@@ -60,25 +60,7 @@ const AppContent: React.FC = () => {
 
   return (
     <>
-      {location.pathname === '/' && (
-        <div style={{ textAlign: 'center', marginTop: '30px' }}>
-          <Link to="/dashboard">
-            <button
-              style={{
-                padding: '10px 20px',
-                fontSize: '16px',
-                backgroundColor: '#007bff',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-              }}
-            >
-              DASHBOARD
-            </button>
-          </Link>
-        </div>
-      )}
+      
     </>
   );
 };
