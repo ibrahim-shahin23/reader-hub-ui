@@ -8,12 +8,12 @@ interface Book {
   id: string;
   title: string;
   author: string;
-  publisher?: string; 
+  publisher: string; 
   price: number;
   coverImage: string;
-  description?: string; 
-  category?: string;
-  inStock?: boolean;
+  description: string; 
+  category: string;
+  inStock: boolean;
   pageCount?: number;
   language?: string;
   rating?: number;

@@ -1,10 +1,7 @@
-import React from 'react';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
-  useLocation,
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
@@ -47,7 +44,6 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
         </Routes>
-        <AppContent />
         <ChatbotWidget />
         <Footer />
       </Router>
@@ -55,14 +51,6 @@ function App() {
   );
 }
 
-const AppContent: React.FC = () => {
-  const location = useLocation();
 
-  return (
-    <>
-      
-    </>
-  );
-};
 
 export default App;

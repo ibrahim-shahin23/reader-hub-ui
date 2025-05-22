@@ -84,6 +84,7 @@ const UsersTab: React.FC = () => {
 
   // Handle pagination
   const handleChangePage = (event: unknown, newPage: number) => {
+    console.log(event)
     setPage(newPage);
   };
 

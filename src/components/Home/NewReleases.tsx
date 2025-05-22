@@ -15,11 +15,11 @@ interface Book {
   price: number;
   coverImage: string;
   description: string;
-  category?: string;
-  inStock?: boolean;
+  category: string;
+  inStock: boolean;
   pageCount?: number;
   language?: string;
-  publicationDate?: string;
+  publicationDate: string;
 }
 
 const NewReleases: React.FC = () => {
@@ -93,6 +93,7 @@ const NewReleases: React.FC = () => {
       inStock: true,
       publicationDate: '2018-10-16'
     },
+
   ];
 
   const handleCardClick = (book: Book) => {
