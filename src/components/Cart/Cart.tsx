@@ -1,59 +1,48 @@
 import React from 'react';
 import { Container, Row, Col, Button, Form, Card, Image } from 'react-bootstrap';
 import { FaPlus, FaMinus, FaTrash } from 'react-icons/fa';
+import { useAppSelector, useAppDispatch } from '../../redux/hooks';
+import { removeFromCart, increaseQuantity, decreaseQuantity } from '../../redux/slices/cartSlice';
 
 const Cart = () => {
-  // Mock cart data with book details
-  const cartItems = [
-    {
-      id: 1,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publisher: "Scribner",
-      price: 12.99,
-      quantity: 1,
-      coverImage: "https://m.media-amazon.com/images/I/71FTb9X6wsL._AC_UF1000,1000_QL80_.jpg"
-    },
-    {
-      id: 2,
-      title: "To Kill a Mockingbird",
-      author: "Harper Lee",
-      publisher: "J. B. Lippincott & Co.",
-      price: 10.50,
-      quantity: 2,
-      coverImage: "https://m.media-amazon.com/images/I/71FxgtFKcQL._AC_UF1000,1000_QL80_.jpg"
-    },
-    {
-      id: 3,
-      title: "1984",
-      author: "George Orwell",
-      publisher: "Secker & Warburg",
-      price: 9.99,
-      quantity: 1,
-      coverImage: "https://m.media-amazon.com/images/I/81WunXq0HjL._AC_UF1000,1000_QL80_.jpg"
-    }
-  ];
+  const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.items);
 
   // Calculate totals
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const deliveryFee = 3.99;
+  const deliveryFee = subtotal > 0 ? 3.99 : 0; // Only charge delivery if there are items
   const total = subtotal + deliveryFee;
 
   // Quantity handlers
-  const increaseQuantity = (id: number) => {
-    // Implement quantity increase logic
-    console.log(`Increase quantity for item ${id}`);
+  const handleIncreaseQuantity = (id: number | string) => {
+    dispatch(increaseQuantity(id));
   };
 
-  const decreaseQuantity = (id: number) => {
-    // Implement quantity decrease logic
-    console.log(`Decrease quantity for item ${id}`);
+  const handleDecreaseQuantity = (id: number | string) => {
+    dispatch(decreaseQuantity(id));
   };
 
-  const removeItem = (id: number) => {
-    // Implement remove item logic
-    console.log(`Remove item ${id}`);
+  const handleRemoveItem = (id: number | string) => {
+    dispatch(removeFromCart(id));
   };
+
+  // If cart is empty, show empty cart message
+  if (cartItems.length === 0) {
+    return (
+      <Container className="my-5 py-4">
+        <h1 className="mb-4">Your Cart</h1>
+        <Card className="border-0 shadow-sm">
+          <Card.Body className="text-center py-5">
+            <h4 className="mb-3">Your cart is empty</h4>
+            <p className="text-muted mb-4">Browse our collection and add some books to your cart!</p>
+            <Button variant="primary" href="/">
+              Start Shopping
+            </Button>
+          </Card.Body>
+        </Card>
+      </Container>
+    );
+  }
 
   return (
     <Container className="my-5 py-4">
@@ -73,6 +62,9 @@ const Cart = () => {
                       alt={item.title}
                       fluid
                       className="rounded shadow-sm"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/120x150/f3f4f6/64748b?text=Book+Cover';
+                      }}
                     />
                   </div>
                   
@@ -88,30 +80,30 @@ const Cart = () => {
                         variant="outline-secondary" 
                         size="sm" 
                         className="px-2 py-1"
-                        onClick={() => decreaseQuantity(item.id)}
+                        onClick={() => handleDecreaseQuantity(item.id)}
                         disabled={item.quantity <= 1}
                       >
                         <FaMinus size={12} />
                       </Button>
-                      <span className="mx-3">{item.quantity}</span>
+                      <span className="mx-3 fw-bold">{item.quantity}</span>
                       <Button 
                         variant="outline-secondary" 
                         size="sm" 
                         className="px-2 py-1"
-                        onClick={() => increaseQuantity(item.id)}
+                        onClick={() => handleIncreaseQuantity(item.id)}
                       >
                         <FaPlus size={12} />
                       </Button>
                     </div>
                     
                     <div className="d-flex justify-content-between align-items-center">
-                      <p className="mb-0 fw-bold">${(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="mb-0 fw-bold fs-5">${(item.price * item.quantity).toFixed(2)}</p>
                       <Button 
                         variant="link" 
                         className="text-danger p-0"
-                        onClick={() => removeItem(item.id)}
+                        onClick={() => handleRemoveItem(item.id)}
                       >
-                        <FaTrash /> Remove
+                        <FaTrash className="me-1" /> Remove
                       </Button>
                     </div>
                   </div>
@@ -129,7 +121,7 @@ const Cart = () => {
               
               <div className="mb-3">
                 <div className="d-flex justify-content-between mb-2">
-                  <span>Subtotal:</span>
+                  <span>Subtotal ({cartItems.length} item{cartItems.length !== 1 ? 's' : ''}):</span>
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
                 <div className="d-flex justify-content-between mb-2">
@@ -142,7 +134,7 @@ const Cart = () => {
                 </div>
                 
                 <div className="border-top pt-3 mb-4">
-                  <div className="d-flex justify-content-between fw-bold">
+                  <div className="d-flex justify-content-between fw-bold fs-5">
                     <span>Total:</span>
                     <span>${total.toFixed(2)}</span>
                   </div>
@@ -154,7 +146,7 @@ const Cart = () => {
                   className="w-100 py-3 fw-bold"
                   href="/checkout"
                 >
-                  Proceed to Checkout
+                  Proceed to Checkout (${total.toFixed(2)})
                 </Button>
               </div>
               
