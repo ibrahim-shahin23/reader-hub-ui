@@ -14,10 +14,10 @@ interface Book {
   coverImage: string;
   price: number;
   inStock: boolean;
-  category?: string;
-  pageCount?: number;
+  category: string;
+  pageCount: number;
   language?: string;
-  rating?: number;
+  rating: number;
 }
 
 const AIRecommendations: React.FC = () => {
@@ -33,6 +33,7 @@ const AIRecommendations: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState<'cart' | 'favorites' | 'removed'>('cart');
 
+  console.log(alertType)
   const recommendedBooks: Book[] = [
     {
       id: '1',
@@ -178,7 +179,7 @@ const AIRecommendations: React.FC = () => {
     },
     gridContainer: {
       width: '100%',
-      overflowX: 'auto', 
+      overflowX: 'auto' as const, 
       paddingBottom: '1rem',
       '@media (max-width: 768px)': {
         paddingBottom: '0.5rem'
@@ -524,7 +525,6 @@ const AIRecommendations: React.FC = () => {
       top: '10vh',
       right: '20px',
       backgroundColor: '#ffffff',
-      border: 'none',
       borderRadius: '12px',
       padding: '1rem 1.5rem',
       boxShadow: '0 10px 40px rgba(0, 0, 0, 0.15), 0 4px 20px rgba(0, 0, 0, 0.1)',
