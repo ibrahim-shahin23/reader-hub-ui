@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({
-    name: 'Alex Johnson',
-    email: 'alex.johnson@example.com',
-    phone: '+1 (555) 123-4567',
+    name: 'ibrahim shahin',
+    email: 'ibrahim.saaed@gmail.com',
+    phone: '',
     password: '••••••••',
     image: ''
   });

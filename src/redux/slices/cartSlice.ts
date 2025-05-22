@@ -25,24 +25,6 @@ interface CartState {
 
 const initialState: CartState = {
   items: [
-    {
-      id: 1,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publisher: "Scribner",
-      price: 12.99,
-      quantity: 1,
-      coverImage: "https://m.media-amazon.com/images/I/71FTb9X6wsL._AC_UF1000,1000_QL80_.jpg"
-    },
-    {
-      id: 2,
-      title: "To Kill a Mockingbird",
-      author: "Harper Lee",
-      publisher: "J. B. Lippincott & Co.",
-      price: 10.50,
-      quantity: 2,
-      coverImage: "https://m.media-amazon.com/images/I/71FxgtFKcQL._AC_UF1000,1000_QL80_.jpg"
-    }
   ],
 };
 
