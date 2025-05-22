@@ -1,4 +1,5 @@
-import { useState, FormEvent } from 'react';
+import { CheckCircle } from 'lucide-react';
+import { useState } from 'react';
 
 interface ContactMessage {
   name: string;
@@ -123,9 +124,13 @@ const Contact = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [isHovered, setIsHovered] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
-  const submitMessage = (event: FormEvent) => {
-    event.preventDefault();
+  const submitMessage = () => {
+    // Basic form validation
+    if (!name || !email || !message) {
+      return;
+    }
 
     const newMessage: ContactMessage = {
       name,
@@ -150,12 +155,56 @@ const Contact = () => {
     setEmail('');
     setMessage('');
 
-    // Show success message
-    alert('Your message has been sent!');
+    // Show toast notification instead of alert
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 2000);
   };
 
   return (
     <div style={styles.body}>
+      {/* Toast Notification */}
+      {showToast && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 9999,
+            animation: 'fadeIn 0.3s ease-out'
+          }}
+        >
+          <div 
+            style={{
+              backgroundColor: '#16a34a',
+              color: 'white',
+              padding: '16px 24px',
+              borderRadius: '8px',
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              maxWidth: '400px',
+              minWidth: '350px'
+            }}
+          >
+            <CheckCircle size={40} style={{ color: '#bbf7d0' }} />
+            <div>
+              <p style={{ 
+                fontWeight: '500', 
+                fontSize: '20px', 
+                margin: 0,
+                lineHeight: '1.4'
+              }}>
+                Your message has been sent to Admin. Thank you for your concern!
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div
         className="row"
         style={{ textAlign: 'center', margin: '20px 0' }}
@@ -169,7 +218,7 @@ const Contact = () => {
         </h2>
 
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2920.6420994424916!2d31.219299751682524!3d30.049389350502917!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145841f8040e981b%3A0x4a430b65203befe9!2z2YXYr9iu2YQg2YXYsdmD2LIg2LTYqNin2Kgg2KfZhNis2LLZitix2KkgKNin2YTYs9io2KfYrdipKQ!5e0!3m2!1sen!2seg!4v1747510462692!5m2!1sen!2seg"
+          src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2756.5788545091714!2d31.21943913137829!3d30.04852984050769!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145841f8040e981b%3A0x4a430b65203befe9!2z2YXYr9iu2YQg2YXYsdmD2LIg2LTYqNin2Kgg2KfZhNis2LLZitix2KkgKNin2YTYs9io2KfYrdipKQ!5e1!3m2!1sen!2seg!4v1747920625035!5m2!1sen!2seg"
           width="200"
           height="650"
           style={{ border: 0 }}
@@ -215,7 +264,7 @@ const Contact = () => {
           </p>
         </div>
 
-        <form id="contact-form" onSubmit={submitMessage} style={styles.form}>
+        <div id="contact-form" style={styles.form}>
           <input
             style={styles.formInput}
             className="form-control"
@@ -248,13 +297,27 @@ const Contact = () => {
           />
           <button
             className="bg-primary"
-            type="submit"
+            type="button"
             style={styles.formButton}
+            onClick={submitMessage}
           >
             <div style={{ color: 'white' }}>Send Message</div>
           </button>
-        </form>
+        </div>
       </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 };

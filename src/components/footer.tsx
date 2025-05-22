@@ -1,6 +1,6 @@
 import { Container, Navbar } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import logo from '../assets/logo1.png';
+import logo from '../assets/logo1 editted.png';
 
 function Footer() {
   return (
@@ -9,7 +9,6 @@ function Footer() {
         <Navbar.Brand className='p-0' as={Link} to="/">
           <img src={logo}
             alt="Logo"
-            width="60"
             height="60"
             className="d-inline-block align-top" />
         </Navbar.Brand>

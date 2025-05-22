@@ -5,7 +5,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import logo from '../assets/logo1.png';
+import logo from '../assets/logo1 editted.png';
 
 function NavbarComponent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -32,7 +32,6 @@ function NavbarComponent() {
             <img
               src={logo}
               alt="Logo"
-              width="60"
               height="60"
               className="d-inline-block align-top"
             />
