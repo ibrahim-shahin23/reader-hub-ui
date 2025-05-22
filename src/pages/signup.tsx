@@ -1,4 +1,23 @@
 import React, { useState } from 'react';
+import adultReader from '../assets/shelf2.png'; // Adjust path as needed
+
+import { 
+  Box, 
+  Typography, 
+  TextField, 
+  Button, 
+  Alert, 
+  Paper, 
+  Container, 
+  Grid, 
+  Link, 
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent
+} from '@mui/material';
 
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -14,18 +33,21 @@ const Signup: React.FC = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const fieldId = e.target.id;
-    // Convert field IDs like "first-name" to "firstName" (camelCase)
-    const fieldName = fieldId.includes('-') 
-      ? fieldId.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
-      : fieldId;
-    
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      [fieldName]: e.target.value
+      [e.target.name]: e.target.value
     });
   };
+
+  const handleSelectChange = (e: SelectChangeEvent) => {
+    setFormData({
+      ...formData,
+      role: e.target.value
+    });
+  };
+
+  const baseUrl = import.meta.env.VITE_BASE_URL;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,11 +62,9 @@ const Signup: React.FC = () => {
       setError('Passwords do not match');
       return;
     }
-    const baseUrl = import.meta.env.VITE_BASE_URL;
 
     setIsSubmitting(true);
     setError('');
-
 
     try {
       const response = await fetch(`${baseUrl}/api/auth/register`, {
@@ -64,9 +84,9 @@ const Signup: React.FC = () => {
       if (!response.ok) {
         const errorData = await response.json();
         console.log('Response error details:', errorData);
-        console.log(formData.role)
+        console.log(formData.role);
         // Display the specific error message from the API to the user
-        setError(errorData.message || errorData.errors[0].message);
+        setError(errorData.message || (errorData.errors && errorData.errors[0]?.message) || 'Registration failed');
         return;
       }
       setSuccess('Signup successful! Redirecting to verification page...');
@@ -76,7 +96,7 @@ const Signup: React.FC = () => {
       }, 2000);
       
     } catch (err) {
-      // setError('Failed to sign up. Please try again later.');
+      setError('Failed to sign up. Please try again later.');
       console.error('Signup error:', err);
     } finally {
       setIsSubmitting(false);
@@ -84,106 +104,145 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <div className="container col-12 col-md-6 mt-5">
-      <h2>Signup</h2>
-      {error && <div className="alert alert-danger">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
-      
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="first-name" className="form-label">
-            First Name
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="first-name"
-            placeholder="Enter your first name"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="last-name" className="form-label">
-            Last Name
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="last-name"
-            placeholder="Enter your last name"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email address
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            placeholder="Enter email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="role" className="form-label">
-            Role
-          </label>
-          <select 
-            className="form-control" 
-            id="role"
-            value={formData.role}
-            onChange={handleChange}
-          >
-            <option value="client">Client</option>
-            <option value="publisher">Publisher</option>
-          </select>
-        </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control mb-2"
-            id="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="confirm-password" className="form-label">
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            className="form-control mb-2"
-            id="confirmPassword"
-            placeholder="Password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-          <a href="login"><strong>Already have an account</strong></a>
-        </div>
-        <button 
-          type="submit" 
-          className="btn btn-primary"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Signing up...' : 'Signup'}
-        </button>
-      </form>
-    </div>
+    <Container maxWidth="lg" sx={{  display: 'flex', p:5 }}>
+      <Paper elevation={3} sx={{ width: '100%', overflow: 'hidden', borderRadius: 2 }}>
+        <Grid container>
+          {/* Image section - takes 2/3 of the space */}
+          <Grid item xs={12} md={8} sx={{ display: { xs: 'none', md: 'block' } }}>
+            <Box 
+              sx={{ 
+                height: '700px', 
+                backgroundImage: `url(${adultReader})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            />
+          </Grid>
+          
+          {/* Form section - takes 1/3 on larger screens, full width on mobile */}
+          <Grid item xs={12} md={4}>
+            <Box 
+              sx={{ 
+                p: 4, 
+                height: { xs: 'auto', md: '700px' }, 
+                display: 'flex', 
+                flexDirection: 'column'
+              }}
+            >
+              <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
+                Signup
+              </Typography>
+              
+              {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+              {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+              
+              <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  name="firstName"
+                  autoComplete="given-name"
+                  autoFocus
+                  value={formData.firstName}
+                  onChange={handleChange}
+                />
+                
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="family-name"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                />
+                
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+                
+                <FormControl fullWidth margin="normal">
+                  <InputLabel id="role-label">Role</InputLabel>
+                  <Select
+                    labelId="role-label"
+                    id="role"
+                    value={formData.role}
+                    label="Role"
+                    onChange={handleSelectChange}
+                  >
+                    <MenuItem value="client">Client</MenuItem>
+                    <MenuItem value="publisher">Publisher</MenuItem>
+                  </Select>
+                </FormControl>
+                
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  type="password"
+                  id="confirmPassword"
+                  autoComplete="new-password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                />
+                
+                <Box sx={{ mt: 1, mb: 2 }}>
+                  <Link href="login" underline="hover" sx={{ fontWeight: 'medium' }}>
+                    Already have an account
+                  </Link>
+                </Box>
+                
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={isSubmitting}
+                  sx={{ 
+                    mt: 2, 
+                    mb: 2,
+                    py: 1.5,
+                    bgcolor: 'primary.main',
+                    '&:hover': {
+                      bgcolor: 'primary.dark',
+                    }
+                  }}
+                >
+                  {isSubmitting ? <CircularProgress size={24} color="inherit" /> : 'Signup'}
+                </Button>
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
+      </Paper>
+    </Container>
   );
 };
 
