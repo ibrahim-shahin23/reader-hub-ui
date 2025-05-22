@@ -18,7 +18,6 @@ import {
   DialogActions,
   IconButton,
   Toolbar,
-  InputAdornment,
   useTheme,
   Avatar,
   Chip,
@@ -79,6 +78,7 @@ const CategoriesTab: React.FC = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  console.log(selectedImage)
   // Filter categories based on search term
   useEffect(() => {
     const filtered = categories.filter(category =>

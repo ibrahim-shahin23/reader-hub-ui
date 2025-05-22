@@ -170,8 +170,6 @@ const HomeBanner: React.FC = () => {
 
   return (
     <div style={styles.banner}>
-      <div style={styles.backgroundPattern}></div>
-      
       <div style={styles.container}>
         <div style={styles.content}>
           <h1 style={styles.heading}>READER HUB</h1>

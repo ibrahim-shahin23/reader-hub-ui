@@ -16,7 +16,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  TablePagination,
   IconButton,
   Toolbar,
   InputAdornment,
@@ -72,6 +71,7 @@ const UsersTab: React.FC = () => {
   const [userToDelete, setUserToDelete] = useState<number | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
+  console.log(setRowsPerPage)
   // Filter users based on search term
   useEffect(() => {
     const filtered = users.filter(user =>

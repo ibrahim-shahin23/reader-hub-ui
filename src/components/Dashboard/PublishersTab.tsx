@@ -25,8 +25,6 @@ import {
   FormControl,
   InputLabel,
   Chip,
-  Link,
-  Avatar,
   List,
   ListItem,
   ListItemIcon,
@@ -46,6 +44,7 @@ import {
   Visibility as ViewIcon,
   GetApp as DownloadIcon
 } from '@mui/icons-material';
+import { SelectChangeEvent } from '@mui/material/Select';
 
 interface Publisher {
   id: number;
@@ -168,6 +167,7 @@ const PublishersTab: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [fileUploadError, setFileUploadError] = useState<string | null>(null);
 
+  console.log(setRowsPerPage)
   // Filter publishers based on search term
   useEffect(() => {
     const filtered = publishers.filter(publisher =>
@@ -180,6 +180,7 @@ const PublishersTab: React.FC = () => {
 
   // Handle pagination
   const handleChangePage = (event: unknown, newPage: number) => {
+    console.log(event)
     setPage(newPage);
   };
 
@@ -259,13 +260,13 @@ const PublishersTab: React.FC = () => {
     });
   };
 
-  const handleStatusChange = (e: any) => {
-    if (!currentPublisher) return;
-    setCurrentPublisher({
-      ...currentPublisher,
-      status: e.target.value as 'active' | 'inactive'
-    });
-  };
+const handleStatusChange = (e: SelectChangeEvent<'active' | 'inactive'>) => {
+  if (!currentPublisher) return;
+  setCurrentPublisher({
+    ...currentPublisher,
+    status: e.target.value as 'active' | 'inactive'
+  });
+};
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;

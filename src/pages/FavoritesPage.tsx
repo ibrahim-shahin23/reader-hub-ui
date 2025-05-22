@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Container, Row, Col, Modal, Button } from 'react-bootstrap';
 import FavoritesBookCard from '../components/FavoritesBookCard';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
