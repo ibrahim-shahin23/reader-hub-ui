@@ -33,7 +33,7 @@ const AIRecommendations: React.FC = () => {
   const recommendedBooks: Book[] = [
     {
       id: '1',
-      title: 'The AI Revolution',
+      title: 'The AI Revolution: How Artificial Intelligence is Changing Everything',
       author: 'Dr. Samantha Chen',
       publisher: 'Tech Publishing Inc.',
       description: 'A comprehensive guide to the AI revolution and its impact on society, business, and technology.',
@@ -43,7 +43,7 @@ const AIRecommendations: React.FC = () => {
     },
     {
       id: '2',
-      title: 'Machine Learning Yearning',
+      title: 'Machine Learning Yearning: Technical Strategy for AI Engineers',
       author: 'Andrew Ng',
       publisher: 'Computer Science Press',
       description: 'Fundamentals of machine learning algorithms and their practical applications in various fields.',
@@ -53,7 +53,7 @@ const AIRecommendations: React.FC = () => {
     },
     {
       id: '3',
-      title: 'Deep Learning',
+      title: 'Deep Learning: A Comprehensive Guide to Neural Networks',
       author: 'Ian Goodfellow',
       publisher: 'Deep Learning Media',
       description: 'Detailed exploration of neural network architectures and their implementation in modern AI systems.',
@@ -63,7 +63,7 @@ const AIRecommendations: React.FC = () => {
     },
     {
       id: '4',
-      title: 'Life 3.0',
+      title: 'Life 3.0: Being Human in the Age of Artificial Intelligence',
       author: 'Max Tegmark',
       publisher: 'Future Tech Publications',
       description: 'A visionary look at how artificial intelligence will shape our future in the coming decades.',
@@ -73,7 +73,7 @@ const AIRecommendations: React.FC = () => {
     },
     {
       id: '5',
-      title: 'Superintelligence',
+      title: 'Superintelligence: Paths, Dangers, Strategies',
       author: 'Nick Bostrom',
       publisher: 'AI Academic Press',
       description: 'The definitive textbook on deep learning methods and their theoretical foundations.',
@@ -109,10 +109,10 @@ const AIRecommendations: React.FC = () => {
       coverImage: book.coverImage,
       description: book.description,
       inStock: book.inStock,
-      category: 'AI & Technology', // Default category for AI recommendations
-      pageCount: 300, // Default page count
-      language: 'English', // Default language
-      rating: 4.5 // Default rating
+      category: 'AI & Technology',
+      pageCount: 300,
+      language: 'English',
+      rating: 4.5
     };
 
     dispatch(addBookToCart(bookForCart));
@@ -177,7 +177,13 @@ const AIRecommendations: React.FC = () => {
       textAlign: 'center' as const,
       borderRadius: '24px',
       marginTop: '2rem',
-      marginBottom: '2rem'
+      marginBottom: '2rem',
+      '@media (max-width: 768px)': {
+        padding: '2rem 1rem',
+        borderRadius: '0',
+        marginTop: '1rem',
+        marginBottom: '1rem'
+      }
     },
     heading: {
       fontSize: '2.5rem',
@@ -185,17 +191,44 @@ const AIRecommendations: React.FC = () => {
       marginBottom: '3rem',
       color: '#ffffff',
       textShadow: '0 2px 4px rgba(0,0,0,0.1)',
-      letterSpacing: '-0.025em'
+      letterSpacing: '-0.025em',
+      '@media (max-width: 768px)': {
+        fontSize: '2rem',
+        marginBottom: '2rem'
+      },
+      '@media (max-width: 480px)': {
+        fontSize: '1.75rem'
+      }
+    },
+    gridContainer: {
+      width: '100%',
+      overflowX: 'auto',
+      paddingBottom: '1rem',
+      '@media (max-width: 768px)': {
+        paddingBottom: '0.5rem'
+      }
     },
     grid: {
-      display: 'flex',
-      justifyContent: 'center',
+      display: 'grid',
+      gridTemplateColumns: 'repeat(5, minmax(200px, 1fr))',
       gap: '1.5rem',
       padding: '0 1rem',
       margin: '0 auto',
-      overflowX: 'auto',
-      scrollbarWidth: 'none' as const,
-      paddingBottom: '1rem'
+      width: 'fit-content',
+      minWidth: '100%',
+      '@media (max-width: 1200px)': {
+        gridTemplateColumns: 'repeat(4, minmax(180px, 1fr))'
+      },
+      '@media (max-width: 992px)': {
+        gridTemplateColumns: 'repeat(3, minmax(160px, 1fr))'
+      },
+      '@media (max-width: 768px)': {
+        gridTemplateColumns: 'repeat(2, minmax(140px, 1fr))',
+        gap: '1rem'
+      },
+      '@media (max-width: 480px)': {
+        gridTemplateColumns: 'repeat(1, minmax(140px, 1fr))'
+      }
     },
     bookCard: {
       cursor: 'pointer',
@@ -204,25 +237,37 @@ const AIRecommendations: React.FC = () => {
       overflow: 'hidden',
       boxShadow: '0 10px 25px rgba(0,0,0,0.1), 0 4px 10px rgba(0,0,0,0.05)',
       textAlign: 'center' as const,
-      minWidth: '200px',
-      flexShrink: 0,
+      width: '100%',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       border: '1px solid rgba(255,255,255,0.2)',
       transform: 'translateY(0)',
       '&:hover': {
         transform: 'translateY(-8px)',
         boxShadow: '0 20px 40px rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.1)'
+      },
+      '@media (max-width: 768px)': {
+        borderRadius: '12px'
       }
     },
     bookImage: {
       width: '100%',
       height: '220px',
       objectFit: 'cover' as const,
-      borderBottom: '1px solid #f1f5f9'
+      borderBottom: '1px solid #f1f5f9',
+      '@media (max-width: 768px)': {
+        height: '180px'
+      }
     },
     bookInfo: {
       padding: '1.25rem 1rem',
-      position: 'relative' as const
+      position: 'relative' as const,
+      minHeight: '180px',
+      display: 'flex',
+      flexDirection: 'column' as const,
+      '@media (max-width: 768px)': {
+        padding: '1rem',
+        minHeight: '160px'
+      }
     },
     bookTitle: {
       fontSize: '1rem',
@@ -230,18 +275,23 @@ const AIRecommendations: React.FC = () => {
       margin: '0 0 0.5rem',
       color: '#1e293b',
       lineHeight: '1.4',
-      display: '-webkit-box',
-      WebkitLineClamp: 2 as const,
-      WebkitBoxOrient: 'vertical' as const,
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      minHeight: '2.8rem'
+      wordWrap: 'break-word' as const,
+      whiteSpace: 'normal' as const,
+      textAlign: 'center' as const,
+      flexGrow: 1,
+      '@media (max-width: 768px)': {
+        fontSize: '0.9375rem'
+      }
     },
     bookAuthor: {
       fontSize: '0.875rem',
       color: '#64748b',
       margin: '0 0 0.75rem',
-      fontWeight: '500' as const
+      fontWeight: '500' as const,
+      '@media (max-width: 768px)': {
+        fontSize: '0.8125rem',
+        marginBottom: '0.5rem'
+      }
     },
     bookPrice: {
       fontSize: '1.125rem',
@@ -251,13 +301,20 @@ const AIRecommendations: React.FC = () => {
       background: 'linear-gradient(135deg, #2563eb, #3b82f6)',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text'
+      backgroundClip: 'text',
+      '@media (max-width: 768px)': {
+        fontSize: '1rem',
+        margin: '0.5rem 0'
+      }
     },
     iconContainer: {
       display: 'flex',
       justifyContent: 'center',
       gap: '1rem',
-      marginTop: '1rem'
+      marginTop: 'auto',
+      '@media (max-width: 768px)': {
+        gap: '0.75rem'
+      }
     },
     iconButton: {
       width: '40px',
@@ -270,7 +327,12 @@ const AIRecommendations: React.FC = () => {
       justifyContent: 'center',
       transition: 'all 0.2s ease',
       fontSize: '1rem',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      '@media (max-width: 768px)': {
+        width: '36px',
+        height: '36px',
+        fontSize: '0.875rem'
+      }
     },
     cartButton: {
       backgroundColor: '#f1f5f9',
@@ -305,6 +367,11 @@ const AIRecommendations: React.FC = () => {
       '&:hover': {
         transform: 'translateY(-2px)',
         boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+      },
+      '@media (max-width: 768px)': {
+        padding: '0.875rem 1.75rem',
+        fontSize: '0.9375rem',
+        marginTop: '2rem'
       }
     },
     modalOverlay: {
@@ -331,7 +398,11 @@ const AIRecommendations: React.FC = () => {
       overflowY: 'auto' as const,
       position: 'relative' as const,
       boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
-      border: '1px solid rgba(255,255,255,0.2)'
+      border: '1px solid rgba(255,255,255,0.2)',
+      '@media (max-width: 768px)': {
+        padding: '1.5rem',
+        borderRadius: '16px'
+      }
     },
     modalClose: {
       position: 'absolute' as const,
@@ -347,7 +418,14 @@ const AIRecommendations: React.FC = () => {
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: '#f8fafc',
-      transition: 'all 0.2s ease'
+      transition: 'all 0.2s ease',
+      '@media (max-width: 768px)': {
+        top: '1rem',
+        right: '1rem',
+        width: '36px',
+        height: '36px',
+        fontSize: '1.25rem'
+      }
     },
     modalImage: {
       width: '220px',
@@ -356,33 +434,51 @@ const AIRecommendations: React.FC = () => {
       margin: '0 auto 1.5rem',
       display: 'block',
       borderRadius: '12px',
-      boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+      boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+      '@media (max-width: 768px)': {
+        width: '180px',
+        height: '240px'
+      }
     },
     modalTitle: {
       fontSize: '1.75rem',
       fontWeight: '700' as const,
       marginBottom: '0.75rem',
       color: '#1e293b',
-      lineHeight: '1.3'
+      lineHeight: '1.3',
+      '@media (max-width: 768px)': {
+        fontSize: '1.5rem'
+      }
     },
     modalAuthor: {
       fontSize: '1.125rem',
       color: '#64748b',
       marginBottom: '0.5rem',
-      fontWeight: '500' as const
+      fontWeight: '500' as const,
+      '@media (max-width: 768px)': {
+        fontSize: '1rem'
+      }
     },
     modalPublisher: {
       fontSize: '1rem',
       color: '#94a3b8',
       marginBottom: '1.5rem',
-      fontWeight: '400' as const
+      fontWeight: '400' as const,
+      '@media (max-width: 768px)': {
+        fontSize: '0.875rem',
+        marginBottom: '1rem'
+      }
     },
     modalDescription: {
       fontSize: '1rem',
       color: '#475569',
       lineHeight: '1.7',
       marginBottom: '2rem',
-      textAlign: 'left' as const
+      textAlign: 'left' as const,
+      '@media (max-width: 768px)': {
+        fontSize: '0.9375rem',
+        marginBottom: '1.5rem'
+      }
     },
     modalActions: {
       display: 'flex',
@@ -390,7 +486,11 @@ const AIRecommendations: React.FC = () => {
       alignItems: 'center',
       marginTop: '2rem',
       paddingTop: '1.5rem',
-      borderTop: '1px solid #e2e8f0'
+      borderTop: '1px solid #e2e8f0',
+      '@media (max-width: 768px)': {
+        marginTop: '1.5rem',
+        paddingTop: '1rem'
+      }
     },
     modalPrice: {
       fontSize: '1.5rem',
@@ -398,11 +498,17 @@ const AIRecommendations: React.FC = () => {
       background: 'linear-gradient(135deg, #2563eb, #3b82f6)',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text'
+      backgroundClip: 'text',
+      '@media (max-width: 768px)': {
+        fontSize: '1.25rem'
+      }
     },
     modalIcons: {
       display: 'flex',
-      gap: '1rem'
+      gap: '1rem',
+      '@media (max-width: 768px)': {
+        gap: '0.75rem'
+      }
     },
     modalIconButton: {
       width: '50px',
@@ -415,7 +521,12 @@ const AIRecommendations: React.FC = () => {
       justifyContent: 'center',
       transition: 'all 0.2s ease',
       fontSize: '1.25rem',
-      boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+      boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+      '@media (max-width: 768px)': {
+        width: '44px',
+        height: '44px',
+        fontSize: '1.125rem'
+      }
     },
     modalCartButton: {
       backgroundColor: '#f1f5f9',
@@ -449,7 +560,14 @@ const AIRecommendations: React.FC = () => {
       justifyContent: 'space-between',
       animation: 'slideIn 0.3s ease',
       backdropFilter: 'blur(20px)',
-      border: '1px solid rgba(255,255,255,0.2)'
+      border: '1px solid rgba(255,255,255,0.2)',
+      '@media (max-width: 768px)': {
+        top: '5vh',
+        right: '10px',
+        left: '10px',
+        maxWidth: 'none',
+        padding: '0.875rem 1.25rem'
+      }
     },
     alertSuccess: {
       borderLeft: '4px solid #10b981'
@@ -459,7 +577,11 @@ const AIRecommendations: React.FC = () => {
       color: '#1e293b',
       margin: 0,
       paddingRight: '1rem',
-      fontWeight: '500' as const
+      fontWeight: '500' as const,
+      '@media (max-width: 768px)': {
+        fontSize: '0.875rem',
+        paddingRight: '0.75rem'
+      }
     },
     alertClose: {
       cursor: 'pointer',
@@ -469,7 +591,10 @@ const AIRecommendations: React.FC = () => {
       border: 'none',
       padding: '4px',
       borderRadius: '4px',
-      transition: 'all 0.2s ease'
+      transition: 'all 0.2s ease',
+      '@media (max-width: 768px)': {
+        fontSize: '0.875rem'
+      }
     }
   };
 
@@ -477,48 +602,50 @@ const AIRecommendations: React.FC = () => {
     <>
       <section style={styles.section}>
         <h2 style={styles.heading}>✨ Recommended by AI</h2>
-        <div style={styles.grid}>
-          {recommendedBooks.map((book) => (
-            <div 
-              key={book.id} 
-              style={styles.bookCard}
-              onClick={() => openModal(book)}
-            >
-              <img 
-                src={book.coverImage} 
-                alt={book.title} 
-                style={styles.bookImage}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = 'https://via.placeholder.com/200x220/f3f4f6/64748b?text=Book+Cover';
-                }}
-              />
-              <div style={styles.bookInfo}>
-                <h3 style={styles.bookTitle}>{book.title}</h3>
-                <p style={styles.bookAuthor}>by {book.author}</p>
-                <div style={styles.bookPrice}>${book.price.toFixed(2)}</div>
-                <div style={styles.iconContainer}>
-                  <button 
-                    style={{
-                      ...styles.iconButton,
-                      ...(isBookInCart(book.id) ? styles.cartButtonActive : styles.cartButton)
-                    }} 
-                    onClick={(e) => handleAddToCart(book, e)}
-                  >
-                    <FaShoppingCart />
-                  </button>
-                  <button 
-                    style={{
-                      ...styles.iconButton,
-                      ...(isBookInFavorites(book.id) ? styles.favoriteButtonActive : styles.favoriteButton)
-                    }} 
-                    onClick={(e) => handleToggleFavorites(book, e)}
-                  >
-                    <FaHeart />
-                  </button>
+        <div style={styles.gridContainer}>
+          <div style={styles.grid}>
+            {recommendedBooks.map((book) => (
+              <div 
+                key={book.id} 
+                style={styles.bookCard}
+                onClick={() => openModal(book)}
+              >
+                <img 
+                  src={book.coverImage} 
+                  alt={book.title} 
+                  style={styles.bookImage}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://via.placeholder.com/200x220/f3f4f6/64748b?text=Book+Cover';
+                  }}
+                />
+                <div style={styles.bookInfo}>
+                  <h3 style={styles.bookTitle}>{book.title}</h3>
+                  <p style={styles.bookAuthor}>by {book.author}</p>
+                  <div style={styles.bookPrice}>${book.price.toFixed(2)}</div>
+                  <div style={styles.iconContainer}>
+                    <button 
+                      style={{
+                        ...styles.iconButton,
+                        ...(isBookInCart(book.id) ? styles.cartButtonActive : styles.cartButton)
+                      }} 
+                      onClick={(e) => handleAddToCart(book, e)}
+                    >
+                      <FaShoppingCart />
+                    </button>
+                    <button 
+                      style={{
+                        ...styles.iconButton,
+                        ...(isBookInFavorites(book.id) ? styles.favoriteButtonActive : styles.favoriteButton)
+                      }} 
+                      onClick={(e) => handleToggleFavorites(book, e)}
+                    >
+                      <FaHeart />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
         <button 
           style={styles.button}

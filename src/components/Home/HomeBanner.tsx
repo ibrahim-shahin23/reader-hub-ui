@@ -14,7 +14,7 @@ const HomeBanner: React.FC = () => {
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       margin: '0 0',
       flexWrap: 'wrap' as const,
-      width: '100vw',
+      width: '100%',
       height: '85vh',
       marginLeft: 'calc(50% - 50vw)',
       marginRight: 'calc(50% - 50vw)',
