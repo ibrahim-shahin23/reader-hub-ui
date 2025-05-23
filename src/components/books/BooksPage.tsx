@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import BookCard from './BookCard';
 import SearchBar from './SearchBar';
 import CategoryFilter from './CategoryFilter';
@@ -7,9 +7,11 @@ import { useAppDispatch } from '../../redux/hooks';
 import { addBookToCart } from '../../redux/slices/cartSlice';
 import { addToFavorites } from '../../redux/slices/favoritesSlice';
 import { Popup } from '../common/Popup';
+import axios from 'axios';
 
 export type Book = {
-  id: string;
+  _id: string; // Changed from id to _id to match API
+  id: string; // Keep id for compatibility if BookCard or other components use it
   title: string;
   author: string;
   coverImage: string;
@@ -21,290 +23,51 @@ export type Book = {
   inStock: boolean;
   pageCount?: number;
   language?: string;
+  // Add discount if it's part of your Book type for UI
+  discount?: number; 
 };
 
-const mockBooks: Book[] = [
-  {
-    id: '1',
-    title: 'The Hobbit',
-    author: 'J.R.R. Tolkien',
-    coverImage: 'https://m.media-amazon.com/images/I/710+HcoP38L._AC_UF1000,1000_QL80_.jpg',
-    category: 'Fantasy',
-    price: 12.99,
-    rating: 4.8,
-    publisher: 'Allen & Unwin',
-    description: 'The Hobbit is a tale of high adventure, undertaken by a company of dwarves, in search of dragon-guarded gold.',
-    inStock: true,
-    pageCount: 310,
-    language: 'English'
-  },
-  {
-    id: '2',
-    title: 'Dune',
-    author: 'Frank Herbert',
-    coverImage: 'https://m.media-amazon.com/images/I/81ym3QUd3KL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Science Fiction',
-    price: 15.99,
-    rating: 4.7,
-    publisher: 'Chilton Books',
-    description: 'Dune is a 1965 science fiction novel by Frank Herbert about the son of a noble family entrusted with the protection of the most valuable asset in the galaxy.',
-    inStock: true,
-    pageCount: 412,
-    language: 'English'
-  },
-  {
-    id: '3',
-    title: 'To Kill a Mockingbird',
-    author: 'Harper Lee',
-    coverImage: 'https://m.media-amazon.com/images/I/71FxgtFKcQL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Fiction',
-    price: 10.99,
-    rating: 4.9,
-    publisher: 'J. B. Lippincott & Co.',
-    description: 'The story of a young girl and her family living in a racially divided Alabama town during the Great Depression.',
-    inStock: false,
-    pageCount: 281,
-    language: 'English'
-  },
-  {
-    id: '4',
-    title: '1984',
-    author: 'George Orwell',
-    coverImage: 'https://m.media-amazon.com/images/I/71kxa1-0mfL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Dystopian',
-    price: 9.99,
-    rating: 4.6,
-    publisher: 'Secker & Warburg',
-    description: 'A dystopian novel set in a totalitarian society ruled by the Party, which has total control over every aspect of people\'s lives.',
-    inStock: true,
-    pageCount: 328,
-    language: 'English'
-  },
-  {
-    id: '5',
-    title: 'Pride and Prejudice',
-    author: 'Jane Austen',
-    coverImage: 'https://m.media-amazon.com/images/I/71Q1tPupKjL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Romance',
-    price: 8.50,
-    rating: 4.5,
-    publisher: 'T. Egerton, Whitehall',
-    description: 'The romantic clash between the opinionated Elizabeth Bennet and the proud Mr. Darcy.',
-    inStock: true,
-    pageCount: 279,
-    language: 'English'
-  },
-  {
-    id: '6',
-    title: 'The Great Gatsby',
-    author: 'F. Scott Fitzgerald',
-    coverImage: 'https://m.media-amazon.com/images/I/71FTb9X6wsL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Fiction',
-    price: 11.99,
-    rating: 4.3,
-    publisher: 'Scribner',
-    description: 'A story of wealth, love, and the American Dream in the Roaring Twenties.',
-    inStock: true,
-    pageCount: 180,
-    language: 'English'
-  },
-  {
-    id: '7',
-    title: 'Moby Dick',
-    author: 'Herman Melville',
-    coverImage: 'https://m.media-amazon.com/images/I/91I5S+2XkVL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Adventure',
-    price: 14.50,
-    rating: 4.0,
-    publisher: 'Harper & Brothers',
-    description: 'The voyage of the whaling ship Pequod and its captain Ahab, who seeks revenge on the white whale Moby Dick.',
-    inStock: true,
-    pageCount: 635,
-    language: 'English'
-  },
-  {
-    id: '8',
-    title: 'War and Peace',
-    author: 'Leo Tolstoy',
-    coverImage: 'https://m.media-amazon.com/images/I/91OqYLJQNJL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Historical Fiction',
-    price: 16.99,
-    rating: 4.7,
-    publisher: 'The Russian Messenger',
-    description: 'A masterpiece that chronicles the French invasion of Russia and the impact of the Napoleonic era on Tsarist society.',
-    inStock: true,
-    pageCount: 1225,
-    language: 'Russian'
-  },
-  {
-    id: '9',
-    title: 'The Catcher in the Rye',
-    author: 'J.D. Salinger',
-    coverImage: 'https://m.media-amazon.com/images/I/91HPG31dTwL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Fiction',
-    price: 10.25,
-    rating: 3.8,
-    publisher: 'Little, Brown and Company',
-    description: 'The story of Holden Caulfield and his experiences in New York City after being expelled from prep school.',
-    inStock: true,
-    pageCount: 234,
-    language: 'English'
-  },
-  {
-    id: '10',
-    title: 'The Lord of the Rings',
-    author: 'J.R.R. Tolkien',
-    coverImage: 'https://m.media-amazon.com/images/I/71jLBXtWJWL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Fantasy',
-    price: 22.99,
-    rating: 4.9,
-    publisher: 'Allen & Unwin',
-    description: 'The epic high fantasy trilogy about the struggle to destroy the One Ring and defeat the Dark Lord Sauron.',
-    inStock: true,
-    pageCount: 1178,
-    language: 'English'
-  },
-  {
-    id: '11',
-    title: 'Crime and Punishment',
-    author: 'Fyodor Dostoevsky',
-    coverImage: 'https://m.media-amazon.com/images/I/71YHjVXyR0L._AC_UF1000,1000_QL80_.jpg',
-    category: 'Psychological Fiction',
-    price: 12.75,
-    rating: 4.5,
-    publisher: 'The Russian Messenger',
-    description: 'A novel about the mental anguish and moral dilemmas of an impoverished ex-student who murders a pawnbroker.',
-    inStock: true,
-    pageCount: 430,
-    language: 'Russian'
-  },
-  {
-    id: '12',
-    title: 'The Alchemist',
-    author: 'Paulo Coelho',
-    coverImage: 'https://m.media-amazon.com/images/I/71aFt4+OTOL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Self-Help',
-    price: 9.99,
-    rating: 3.9,
-    publisher: 'HarperTorch',
-    description: 'A shepherd boy travels from Spain to Egypt in search of treasure and discovers his personal legend.',
-    inStock: true,
-    pageCount: 208,
-    language: 'Portuguese'
-  },
-  {
-    id: '13',
-    title: 'The Diary of a Young Girl',
-    author: 'Anne Frank',
-    coverImage: 'https://m.media-amazon.com/images/I/71M7Z6hZRjL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Biography',
-    price: 8.25,
-    rating: 4.7,
-    publisher: 'Contact Publishing',
-    description: 'The diary of Anne Frank, a Jewish girl who chronicled her life in hiding during the German occupation of the Netherlands.',
-    inStock: true,
-    pageCount: 283,
-    language: 'Dutch'
-  },
-  {
-    id: '14',
-    title: 'The Little Prince',
-    author: 'Antoine de Saint-Exupéry',
-    coverImage: 'https://m.media-amazon.com/images/I/81HZ9p+3M5L._AC_UF1000,1000_QL80_.jpg',
-    category: 'Children',
-    price: 7.50,
-    rating: 4.8,
-    publisher: 'Reynal & Hitchcock',
-    description: 'A poetic tale about a young prince who travels the universe and learns about love, loss, and human nature.',
-    inStock: true,
-    pageCount: 96,
-    language: 'French'
-  },
-  {
-    id: '15',
-    title: 'Don Quixote',
-    author: 'Miguel de Cervantes',
-    coverImage: 'https://m.media-amazon.com/images/I/91Q5dC+9QhL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Adventure',
-    price: 13.99,
-    rating: 4.2,
-    publisher: 'Francisco de Robles',
-    description: 'The story of a man who reads so many chivalric romances that he decides to become a knight-errant.',
-    inStock: true,
-    pageCount: 863,
-    language: 'Spanish'
-  },
-  {
-    id: '16',
-    title: 'The Odyssey',
-    author: 'Homer',
-    coverImage: 'https://m.media-amazon.com/images/I/91b5Y9GqY1L._AC_UF1000,1000_QL80_.jpg',
-    category: 'Epic Poetry',
-    price: 10.99,
-    rating: 4.1,
-    publisher: 'Various',
-    description: 'The ancient Greek epic poem about Odysseus\'s long journey home after the fall of Troy.',
-    inStock: true,
-    pageCount: 541,
-    language: 'Ancient Greek'
-  },
-  {
-    id: '17',
-    title: 'Frankenstein',
-    author: 'Mary Shelley',
-    coverImage: 'https://m.media-amazon.com/images/I/71E4WQKz3TL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Gothic Fiction',
-    price: 9.25,
-    rating: 4.0,
-    publisher: 'Lackington, Hughes',
-    description: 'A scientist creates a sapient creature in an unorthodox scientific experiment.',
-    inStock: true,
-    pageCount: 280,
-    language: 'English'
-  },
-  {
-    id: '18',
-    title: 'The Picture of Dorian Gray',
-    author: 'Oscar Wilde',
-    coverImage: 'https://m.media-amazon.com/images/I/71QN2Xx3VVL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Gothic Fiction',
-    price: 8.99,
-    rating: 4.2,
-    publisher: 'Lippincott\'s Monthly Magazine',
-    description: 'A story of a man who remains eternally young while his portrait ages and reflects his moral decay.',
-    inStock: true,
-    pageCount: 254,
-    language: 'English'
-  },
-  {
-    id: '19',
-    title: 'Wuthering Heights',
-    author: 'Emily Brontë',
-    coverImage: 'https://m.media-amazon.com/images/I/71Jk3baR3RL._AC_UF1000,1000_QL80_.jpg',
-    category: 'Gothic Fiction',
-    price: 10.50,
-    rating: 4.0,
-    publisher: 'Thomas Cautley Newby',
-    description: 'A story of the intense, passionate, but ultimately doomed love between Catherine Earnshaw and Heathcliff.',
-    inStock: true,
-    pageCount: 348,
-    language: 'English'
-  },
-  {
-    id: '20',
-    title: 'The Brothers Karamazov',
-    author: 'Fyodor Dostoevsky',
-    coverImage: 'https://m.media-amazon.com/images/I/91QdSMZ0X5L._AC_UF1000,1000_QL80_.jpg',
-    category: 'Philosophical Fiction',
-    price: 15.99,
-    rating: 4.6,
-    publisher: 'The Russian Messenger',
-    description: 'A passionate philosophical novel set in 19th-century Russia that enters deeply into debates about God, free will, and morality.',
-    inStock: true,
-    pageCount: 796,
-    language: 'Russian'
-  }
-];
+// Interface for the book data coming from the API
+interface ApiBook {
+  _id: string;
+  title: string;
+  description: string;
+  images: string[];
+  price: number;
+  discount: number;
+  publishing_date: string; 
+  author_id: {
+    _id: string; // Keep _id as it seems to be always present
+    firstName?: string; // Make optional
+    lastName?: string;  // Make optional
+  } | null; // author_id object itself can be null
+  publisher_id: {
+    _id: string; // Keep _id
+    name?: string;    // Make optional
+  } | null; // publisher_id object itself can be null
+  category_id: {
+    _id: string; // Keep _id
+    name?: string;    // Make optional
+  } | null; // category_id object itself can be null
+  status: 'available' | 'out of stock' | 'unpublished';
+  pageCount?: number;
+  language?: string;
+  rating?: number; // If API provides rating
+}
+
+// Interface for the API response structure
+interface ApiResponse {
+  success: boolean;
+  data: {
+    books: ApiBook[];
+    pagination: {
+      total: number;
+      page: number;
+      pages: number;
+    };
+  };
+  message?: string;
+}
 
 const categories = [
   'Fiction', 'Non-Fiction', 'Science Fiction', 'Fantasy', 
@@ -314,27 +77,85 @@ const categories = [
 ] as const;
 
 const BOOKS_PER_PAGE = 10;
+// const API_BASE_URL = "http://localhost:8000"; 
+const API_BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function BooksPage() {
   const dispatch = useAppDispatch();
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalBooks, setTotalBooks] = useState(0);
+
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
 
-  const filteredBooks = mockBooks.filter(book => {
-    const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         book.author.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = !selectedCategory || book.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  useEffect(() => {
+    const fetchBooks = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const params: Record<string, string | number | undefined> = {
+          page: currentPage,
+          limit: BOOKS_PER_PAGE,
+          title: searchQuery || undefined, // Use 'title' for search as per backend
+          category: selectedCategory || undefined, // Assuming backend uses 'category' for category name
+        };
 
-  const totalPages = Math.ceil(filteredBooks.length / BOOKS_PER_PAGE);
-  const paginatedBooks = filteredBooks.slice(
-    (currentPage - 1) * BOOKS_PER_PAGE,
-    currentPage * BOOKS_PER_PAGE
-  );
+        // Remove undefined params
+        Object.keys(params).forEach(key => params[key] === undefined && delete params[key]);
+
+        const response = await axios.get<ApiResponse>(`${API_BASE_URL}/api/books`, { params });
+
+        if (response.data.success) {
+          const transformedBooks: Book[] = response.data.data.books.map(apiBook => ({
+            _id: apiBook._id,
+            id: apiBook._id, // For compatibility
+            title: apiBook.title,
+            author: apiBook.author_id && apiBook.author_id.firstName && apiBook.author_id.lastName 
+              ? `${apiBook.author_id.firstName} ${apiBook.author_id.lastName}` 
+              : 'Unknown Author',
+            coverImage: apiBook.images && apiBook.images.length > 0 ? apiBook.images[0] : 'https://via.placeholder.com/150', // Placeholder image
+            category: apiBook.category_id && apiBook.category_id.name 
+              ? apiBook.category_id.name 
+              : 'Uncategorized',
+            price: apiBook.price,
+            discount: apiBook.discount,
+            publisher: apiBook.publisher_id && apiBook.publisher_id.name 
+              ? apiBook.publisher_id.name 
+              : 'Unknown Publisher',
+            description: apiBook.description,
+            inStock: apiBook.status === 'available',
+            pageCount: apiBook.pageCount,
+            language: apiBook.language,
+            rating: apiBook.rating, 
+          }));
+          setBooks(transformedBooks);
+          setTotalPages(response.data.data.pagination.pages);
+          setTotalBooks(response.data.data.pagination.total);
+        } else {
+          setError(response.data.message || 'Failed to fetch books.');
+        }
+      } catch (err) {
+        console.error("Error fetching books:", err);
+        if (axios.isAxiosError(err) && err.response) {
+          setError(err.response.data.message || 'An error occurred while fetching books.');
+        } else {
+          setError('An unexpected error occurred.');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooks();
+  }, [currentPage, searchQuery, selectedCategory]);
+
 
   const handleBookClick = (book: Book) => {
     setSelectedBook(book);
@@ -343,13 +164,49 @@ export default function BooksPage() {
   const handleAddToCart = (book: Book) => {
     dispatch(addBookToCart(book));
     setPopupMessage(`${book.title} has been added to your cart!`);
-    setSelectedBook(null);
+    setSelectedBook(null); // Close modal if open
   };
 
-  const handleAddToFavorite = (book: Book) => {
+  const handleAddToFavorite = async (book: Book) => {
+    const token = localStorage.getItem('token'); // Example: if token is in localStorage
+
+    if (!book._id) {
+      console.error("Book ID is missing.");
+      return;
+    }
+
+    if (!token) {
+      console.error("Authentication token not found.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/favorites/add`, { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, 
+        },
+        body: JSON.stringify({ bookId: book._id }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Failed to add to favorites:", data.message || 'Server error');
+       
+        return;
+      }
+
+      console.log("Book added to favorites successfully:", data);
+     } catch (error) {
+      console.error("Error adding book to favorites:", error);
+     
+    }
+  
     dispatch(addToFavorites(book));
     setPopupMessage(`${book.title} has been added to your favorites!`);
-    setSelectedBook(null);
+    setSelectedBook(null); // Close modal if open
   };
 
   const closeModal = () => {
@@ -367,7 +224,7 @@ export default function BooksPage() {
       margin: '0 auto',
       fontFamily: 'Arial, sans-serif',
       minHeight: 'calc(100vh - 100px)',
-      position: 'relative'
+      position: 'relative' // For Popup positioning context if needed
     }}>
       <h1 style={{ 
         fontSize: '1.8rem', 
@@ -375,7 +232,7 @@ export default function BooksPage() {
         textAlign: 'center',
         color: '#2c3e50'
       }}>
-        Our Book Collection ({filteredBooks.length} books)
+        Our Book Collection ({totalBooks > 0 ? totalBooks : '...'} books)
       </h1>
       
       <div style={{ 
@@ -384,56 +241,69 @@ export default function BooksPage() {
         flexDirection: 'column', 
         gap: '10px'
       }}>
-        <SearchBar onSearch={(query) => {
+        {/* <SearchBar onSearch={(query) => {
           setSearchQuery(query);
-          setCurrentPage(1);
-        }} />
+          setCurrentPage(1); // Reset to first page on new search
+        }} /> */}
         
-        <CategoryFilter 
-          categories={categories} 
+        {/* <CategoryFilter 
+          categories={categories} // You might want to fetch categories from API too
           selectedCategory={selectedCategory}
           onSelectCategory={(category) => {
             setSelectedCategory(category);
-            setCurrentPage(1);
+            setCurrentPage(1); // Reset to first page on category change
           }}
-        />
+        /> */}
       </div>
+
+      {loading && (
+        <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>Loading books...</div>
+      )}
+      {error && !loading && (
+        <div style={{ textAlign: 'center', padding: '40px', color: '#e53e3e' }}>Error: {error}</div>
+      )}
       
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-        gap: '15px',
-        margin: '20px 0'
-      }}>
-        {paginatedBooks.map(book => (
-          <BookCard
-            key={book.id}
-            book={book}
-            onBookClick={() => handleBookClick(book)}
-            onAddToCart={() => handleAddToCart(book)}
-            onAddToFavorite={() => handleAddToFavorite(book)}
-          />
-        ))}
-      </div>
-      
-      {filteredBooks.length > 0 ? (
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          marginTop: '30px',
-          padding: '20px 0',
-          borderTop: '1px solid #eee'
-        }}>
-          <Pagination 
-            currentPage={currentPage} 
-            totalPages={totalPages} 
-            onPageChange={setCurrentPage} 
-          />
-        </div>
-      ) : (
-        <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-          No books found matching your criteria
-        </div>
+      {!loading && !error && (
+        <>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+            gap: '15px',
+            margin: '20px 0'
+          }}>
+            {books.map(book => (
+              <BookCard
+                key={book._id} // Use _id from API as key
+                book={book}
+                onBookClick={() => handleBookClick(book)}
+                onAddToCart={() => handleAddToCart(book)} // Pass the whole book object
+                onAddToFavorite={() => handleAddToFavorite(book)} // Pass the whole book object
+              />
+            ))}
+          </div>
+          
+          {books.length === 0 && !loading && (
+             <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+               No books found matching your criteria.
+             </div>
+          )}
+
+          {totalPages > 1 && books.length > 0 && (
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              marginTop: '30px',
+              padding: '20px 0',
+              borderTop: '1px solid #eee'
+            }}>
+              <Pagination 
+                currentPage={currentPage} 
+                totalPages={totalPages} 
+                onPageChange={setCurrentPage} 
+              />
+            </div>
+          )}
+        </>
       )}
 
       {selectedBook && (
@@ -509,6 +379,11 @@ export default function BooksPage() {
                 </p>
                 <p style={{ margin: '0 0 10px' }}>
                   <strong>Price:</strong> ${selectedBook.price.toFixed(2)}
+                  {selectedBook.discount && selectedBook.discount > 0 && (
+                    <span style={{ marginLeft: '10px', color: 'red' }}>
+                      ({selectedBook.discount}% off)
+                    </span>
+                  )}
                 </p>
                 <p style={{ 
                   margin: '0 0 10px',
@@ -566,6 +441,7 @@ export default function BooksPage() {
 
       {popupMessage && (
         <>
+          {/* Overlay for popup */}
           <div style={{
             position: 'fixed',
             top: 0,
@@ -573,7 +449,7 @@ export default function BooksPage() {
             right: 0,
             bottom: 0,
             backgroundColor: 'rgba(0,0,0,0.5)',
-            zIndex: 1000
+            zIndex: 1000 // Ensure overlay is below popup but above other content
           }} onClick={closePopup} />
           <Popup message={popupMessage} onClose={closePopup} />
         </>
